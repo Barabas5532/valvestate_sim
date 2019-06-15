@@ -1,20 +1,19 @@
-/*
-  ==============================================================================
-
-    This file was auto-generated!
-
-    It contains the basic framework code for a JUCE plugin processor.
-
-  ==============================================================================
-*/
-
 #include "PluginProcessor.h"
 #include "PluginEditor.h"
 
-//==============================================================================
-ValvestateAudioProcessor::ValvestateAudioProcessor()
+ValvestateAudioProcessor::ValvestateAudioProcessor() : parameters(*this,
+        nullptr, "PARAMETERS", 
+        {
+        std::make_unique<AudioParameterBool>  ("od", "OD1/OD2", false),
+        std::make_unique<AudioParameterFloat> ("gain", "Gain", 0, 1, 0.5),
+        std::make_unique<AudioParameterFloat> ("bass", "Bass", 0, 1, 0.5),
+        std::make_unique<AudioParameterFloat> ("middle" , "Middle", 0, 1, 0.5),
+        std::make_unique<AudioParameterFloat> ("treble", "Treble", 0, 1, 0.5),
+        std::make_unique<AudioParameterFloat> ("presence", "Presence", 0, 1, 0.5),
+        std::make_unique<AudioParameterFloat> ("volume", "Volume", 0, 1, 0.5)
+        })
 #ifndef JucePlugin_PreferredChannelConfigurations
-     : AudioProcessor (BusesProperties()
+     ,AudioProcessor (BusesProperties()
                      #if ! JucePlugin_IsMidiEffect
                       #if ! JucePlugin_IsSynth
                        .withInput  ("Input",  AudioChannelSet::stereo(), true)
@@ -24,6 +23,14 @@ ValvestateAudioProcessor::ValvestateAudioProcessor()
                        )
 #endif
 {
+
+    od = parameters.getRawParameterValue("od");
+    gain = parameters.getRawParameterValue("gain");
+    bass = parameters.getRawParameterValue("bass");
+    middle = parameters.getRawParameterValue("middle");
+    treble = parameters.getRawParameterValue("treble");
+    presence = parameters.getRawParameterValue("presence");
+    volume = parameters.getRawParameterValue("volume");
 }
 
 ValvestateAudioProcessor::~ValvestateAudioProcessor()
@@ -149,21 +156,25 @@ bool ValvestateAudioProcessor::hasEditor() const
 
 AudioProcessorEditor* ValvestateAudioProcessor::createEditor()
 {
-    return new ValvestateAudioProcessorEditor (*this);
+    //return new ValvestateAudioProcessorEditor (*this);
+    return new GenericAudioProcessorEditor(this);
 }
 
 //==============================================================================
 void ValvestateAudioProcessor::getStateInformation (MemoryBlock& destData)
 {
-    // You should use this method to store your parameters in the memory block.
-    // You could do that either as raw data, or use the XML or ValueTree classes
-    // as intermediaries to make it easy to save and load complex data.
+    auto state = parameters.copyState();
+    std::unique_ptr<XmlElement> xml (state.createXml());
+    copyXmlToBinary (*xml, destData);
 }
 
 void ValvestateAudioProcessor::setStateInformation (const void* data, int sizeInBytes)
 {
-    // You should use this method to restore your parameters from this memory block,
-    // whose contents will have been created by the getStateInformation() call.
+    std::unique_ptr<XmlElement> xmlState (getXmlFromBinary (data, sizeInBytes));
+
+    if (xmlState.get() != nullptr)
+        if (xmlState->hasTagName (parameters.state.getType()))
+            parameters.replaceState (ValueTree::fromXml (*xmlState));
 }
 
 //==============================================================================

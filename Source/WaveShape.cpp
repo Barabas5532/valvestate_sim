@@ -54,5 +54,5 @@ float waveshape(float input)
             ratio*(shape[(int)ceil(index)]-shape[(int)floor(index)]);
     }
 
-    return output/300.0f;
+    return (output - shape[shape_size/2])/300.0f;
 }
