@@ -107,12 +107,14 @@ void ValvestateAudioProcessor::prepareToPlay (double sampleRate, int samplesPerB
     spec.maximumBlockSize = samplesPerBlock;
     spec.numChannels = 1;
 
+    input.prepare(spec);
     clipping.prepare(spec);
     contour.prepare(spec);
 }
 
 void ValvestateAudioProcessor::releaseResources()
 {
+    input.reset();
     clipping.reset();
     contour.reset();
 }
@@ -150,6 +152,7 @@ void ValvestateAudioProcessor::processBlock (AudioBuffer<float>& buffer, MidiBuf
 
     contour.setParameter(*contourP);
 
+    input.process(context);
     clipping.process(block);
     contour.process(context);
 }

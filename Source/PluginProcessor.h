@@ -3,6 +3,7 @@
 #include "../JuceLibraryCode/JuceHeader.h"
 #include "Clipping.h"
 #include "Contour.h"
+#include "InputFilter.h"
 
 class ValvestateAudioProcessor  : public AudioProcessor
 {
@@ -49,6 +50,7 @@ private:
     float *contourP;
     float *volume;
 
+    InputFilter input;
     Clipping clipping;
     ContourFilter contour;
 
