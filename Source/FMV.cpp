@@ -12,7 +12,8 @@ void FMVFilter::prepare(dsp::ProcessSpec spec)
 
 void FMVFilter::process(dsp::ProcessContextReplacing<float> context)
 {
-    filter.process(context);
+    //filter.coefficients = 
+    //filter.process(context);
 }
 
 void FMVFilter::reset()
@@ -20,7 +21,7 @@ void FMVFilter::reset()
     filter.reset();
 }
 
-dsp::IIR::Coefficients<float> FMVFilter::design(float l, float m, float t)
+dsp::IIR::Coefficients<float> *FMVFilter::design(float l, float m, float t)
 {
     const float R1 = 220e3;
     const float R2 = 1e6;
