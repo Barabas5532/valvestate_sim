@@ -9,7 +9,8 @@ ValvestateAudioProcessor::ValvestateAudioProcessor() : parameters(*this,
         std::make_unique<AudioParameterFloat> ("bass", "Bass", 0, 1, 0.5),
         std::make_unique<AudioParameterFloat> ("middle" , "Middle", 0, 1, 0.5),
         std::make_unique<AudioParameterFloat> ("treble", "Treble", 0, 1, 0.5),
-        std::make_unique<AudioParameterFloat> ("presence", "Presence", 0, 1, 0.5),
+        //contour gets unstable when set to 0
+        std::make_unique<AudioParameterFloat> ("contour", "Contour", 0.01, 1, 0.5),
         std::make_unique<AudioParameterFloat> ("volume", "Volume", 0, 1, 0.5)
         })
 #ifndef JucePlugin_PreferredChannelConfigurations
@@ -23,13 +24,12 @@ ValvestateAudioProcessor::ValvestateAudioProcessor() : parameters(*this,
                        )
 #endif
 {
-
     od = parameters.getRawParameterValue("od");
     gain = parameters.getRawParameterValue("gain");
     bass = parameters.getRawParameterValue("bass");
     middle = parameters.getRawParameterValue("middle");
     treble = parameters.getRawParameterValue("treble");
-    presence = parameters.getRawParameterValue("presence");
+    contourP = parameters.getRawParameterValue("contour");
     volume = parameters.getRawParameterValue("volume");
 }
 
@@ -108,11 +108,13 @@ void ValvestateAudioProcessor::prepareToPlay (double sampleRate, int samplesPerB
     spec.numChannels = 1;
 
     clipping.prepare(spec);
+    contour.prepare(spec);
 }
 
 void ValvestateAudioProcessor::releaseResources()
 {
     clipping.reset();
+    contour.reset();
 }
 
 #ifndef JucePlugin_PreferredChannelConfigurations
@@ -144,8 +146,12 @@ void ValvestateAudioProcessor::processBlock (AudioBuffer<float>& buffer, MidiBuf
     ScopedNoDenormals noDenormals;
 
     dsp::AudioBlock<float> block(buffer);
+    dsp::ProcessContextReplacing<float> context(block);
+
+    contour.setParameter(*contourP);
 
     clipping.process(block);
+    contour.process(context);
 }
 
 //==============================================================================

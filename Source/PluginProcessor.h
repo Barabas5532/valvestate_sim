@@ -2,6 +2,7 @@
 
 #include "../JuceLibraryCode/JuceHeader.h"
 #include "Clipping.h"
+#include "Contour.h"
 
 class ValvestateAudioProcessor  : public AudioProcessor
 {
@@ -38,7 +39,6 @@ public:
     void setStateInformation (const void* data, int sizeInBytes) override;
 
 private:
-    Clipping clipping;
     AudioProcessorValueTreeState parameters;
 
     float *od;
@@ -46,8 +46,11 @@ private:
     float *bass;
     float *middle;
     float *treble;
-    float *presence;
+    float *contourP;
     float *volume;
+
+    Clipping clipping;
+    ContourFilter contour;
 
     JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR (ValvestateAudioProcessor)
 };
