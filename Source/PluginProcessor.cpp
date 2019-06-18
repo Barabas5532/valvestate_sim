@@ -108,6 +108,7 @@ void ValvestateAudioProcessor::prepareToPlay (double sampleRate, int samplesPerB
     spec.numChannels = 1;
 
     input.prepare(spec);
+    gaincontrol.prepare(spec);
     clipping.prepare(spec);
     contour.prepare(spec);
 }
@@ -115,6 +116,7 @@ void ValvestateAudioProcessor::prepareToPlay (double sampleRate, int samplesPerB
 void ValvestateAudioProcessor::releaseResources()
 {
     input.reset();
+    gaincontrol.reset();
     clipping.reset();
     contour.reset();
 }
@@ -150,9 +152,13 @@ void ValvestateAudioProcessor::processBlock (AudioBuffer<float>& buffer, MidiBuf
     dsp::AudioBlock<float> block(buffer);
     dsp::ProcessContextReplacing<float> context(block);
 
+    //set parameters
+    gaincontrol.setParameters(*gain, *od);
     contour.setParameter(*contourP);
 
+    //process data
     input.process(context);
+    gaincontrol.process(context);
     clipping.process(block);
     contour.process(context);
 }

@@ -1,9 +1,10 @@
 #pragma once
 
 #include "../JuceLibraryCode/JuceHeader.h"
+#include "InputFilter.h"
+#include "GainControl.h"
 #include "Clipping.h"
 #include "Contour.h"
-#include "InputFilter.h"
 
 class ValvestateAudioProcessor  : public AudioProcessor
 {
@@ -51,6 +52,7 @@ private:
     float *volume;
 
     InputFilter input;
+    GainControl gaincontrol;
     Clipping clipping;
     ContourFilter contour;
 
