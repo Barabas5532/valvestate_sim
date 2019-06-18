@@ -42,6 +42,7 @@ public:
     void setStateInformation (const void* data, int sizeInBytes) override;
 
 private:
+    NormalisableRange<float> logRange;
     AudioProcessorValueTreeState parameters;
 
     float *od;

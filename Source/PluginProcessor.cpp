@@ -1,17 +1,17 @@
 #include "PluginProcessor.h"
 #include "PluginEditor.h"
 
-ValvestateAudioProcessor::ValvestateAudioProcessor() : parameters(*this,
+ValvestateAudioProcessor::ValvestateAudioProcessor() : logRange(0, 1, 0.001, 0.3), parameters(*this,
         nullptr, "PARAMETERS", 
         {
         std::make_unique<AudioParameterBool>  ("od", "OD1/OD2", false),
-        std::make_unique<AudioParameterFloat> ("gain", "Gain", 0, 1, 0.5),
-        std::make_unique<AudioParameterFloat> ("bass", "Bass", 0, 1, 0.5),
+        std::make_unique<AudioParameterFloat> ("gain", "Gain", logRange, logRange.convertFrom0to1(0.5)),
+        std::make_unique<AudioParameterFloat> ("bass", "Bass", logRange, logRange.convertFrom0to1(0.5)),
         std::make_unique<AudioParameterFloat> ("middle" , "Middle", 0, 1, 0.5),
         std::make_unique<AudioParameterFloat> ("treble", "Treble", 0, 1, 0.5),
         //contour gets unstable when set to 0
         std::make_unique<AudioParameterFloat> ("contour", "Contour", 0.01, 1, 0.5),
-        std::make_unique<AudioParameterFloat> ("volume", "Volume", -60, 0, 0)
+        std::make_unique<AudioParameterFloat> ("volume", "Volume", 20, 50, 35)
         })
 #ifndef JucePlugin_PreferredChannelConfigurations
      ,AudioProcessor (BusesProperties()
