@@ -4,6 +4,7 @@
 #include "InputFilter.h"
 #include "GainControl.h"
 #include "Clipping.h"
+#include "FMV.h"
 #include "Contour.h"
 
 class ValvestateAudioProcessor  : public AudioProcessor
@@ -54,6 +55,7 @@ private:
     InputFilter input;
     GainControl gaincontrol;
     Clipping clipping;
+    FMVFilter fmv;
     ContourFilter contour;
 
     JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR (ValvestateAudioProcessor)

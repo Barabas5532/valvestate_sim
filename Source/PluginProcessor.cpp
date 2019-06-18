@@ -11,7 +11,7 @@ ValvestateAudioProcessor::ValvestateAudioProcessor() : parameters(*this,
         std::make_unique<AudioParameterFloat> ("treble", "Treble", 0, 1, 0.5),
         //contour gets unstable when set to 0
         std::make_unique<AudioParameterFloat> ("contour", "Contour", 0.01, 1, 0.5),
-        std::make_unique<AudioParameterFloat> ("volume", "Volume", 0, 1, 0.5)
+        std::make_unique<AudioParameterFloat> ("volume", "Volume", -60, 0, 0)
         })
 #ifndef JucePlugin_PreferredChannelConfigurations
      ,AudioProcessor (BusesProperties()
@@ -110,6 +110,7 @@ void ValvestateAudioProcessor::prepareToPlay (double sampleRate, int samplesPerB
     input.prepare(spec);
     gaincontrol.prepare(spec);
     clipping.prepare(spec);
+    fmv.prepare(spec);
     contour.prepare(spec);
 }
 
@@ -118,6 +119,7 @@ void ValvestateAudioProcessor::releaseResources()
     input.reset();
     gaincontrol.reset();
     clipping.reset();
+    fmv.reset();
     contour.reset();
 }
 
@@ -154,13 +156,17 @@ void ValvestateAudioProcessor::processBlock (AudioBuffer<float>& buffer, MidiBuf
 
     //set parameters
     gaincontrol.setParameters(*gain, *od);
+    fmv.setParameters(*bass, *middle, *treble);
     contour.setParameter(*contourP);
 
     //process data
     input.process(context);
     gaincontrol.process(context);
     clipping.process(block);
+    fmv.process(context);
     contour.process(context);
+
+    block.multiply(Decibels::decibelsToGain(*volume));
 }
 
 //==============================================================================

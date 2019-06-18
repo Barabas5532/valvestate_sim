@@ -8,12 +8,13 @@ class FMVFilter
     FMVFilter();
     ~FMVFilter();
 
+    void setParameters(float l, float m, float t);
+
     void prepare(dsp::ProcessSpec spec);
     void process(dsp::ProcessContextReplacing<float> context);
     void reset();
 
     private:
-    dsp::IIR::Coefficients<float> *design(float l, float m, float t);
 
     dsp::IIR::Filter<float> filter;
     float sampleRate;
