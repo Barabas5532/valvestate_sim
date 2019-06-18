@@ -43,8 +43,11 @@ public:
 
 private:
     NormalisableRange<float> logRange;
+
+public:
     AudioProcessorValueTreeState parameters;
 
+private:
     float *od;
     float *gain;
     float *bass;

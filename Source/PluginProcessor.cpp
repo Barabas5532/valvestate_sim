@@ -1,7 +1,7 @@
 #include "PluginProcessor.h"
 #include "PluginEditor.h"
 
-ValvestateAudioProcessor::ValvestateAudioProcessor() : logRange(0, 1, 0.001, 0.3), parameters(*this,
+ValvestateAudioProcessor::ValvestateAudioProcessor() : logRange(0, 1, 0.0001, 0.3), parameters(*this,
         nullptr, "PARAMETERS", 
         {
         std::make_unique<AudioParameterBool>  ("od", "OD1/OD2", false),
@@ -177,8 +177,8 @@ bool ValvestateAudioProcessor::hasEditor() const
 
 AudioProcessorEditor* ValvestateAudioProcessor::createEditor()
 {
-    //return new ValvestateAudioProcessorEditor (*this);
-    return new GenericAudioProcessorEditor(this);
+    return new ValvestateAudioProcessorEditor (*this);
+    //return new GenericAudioProcessorEditor(this);
 }
 
 //==============================================================================

@@ -12,6 +12,7 @@
 
 #include "../JuceLibraryCode/JuceHeader.h"
 #include "PluginProcessor.h"
+#include "UI.h"
 
 //==============================================================================
 /**
@@ -27,9 +28,22 @@ public:
     void resized() override;
 
 private:
-    // This reference is provided as a quick way for your editor to
-    // access the processor object that created it.
+    void applySliderStyle(Slider &s);
     ValvestateAudioProcessor& processor;
+
+    ValvestateLookAndFeel vsLookAndFeel;
+
+    typedef AudioProcessorValueTreeState::SliderAttachment SliderAttachment;
+    typedef AudioProcessorValueTreeState::ButtonAttachment ButtonAttachment;
+
+    Slider gain, bass, middle, treble, contour, volume;
+    ToggleButton button;
+
+    std::unique_ptr<SliderAttachment> gainAttachment, bassAttachment, middleAttachment,
+                     trebleAttachment, contourAttachment, volumeAttachment;
+    std::unique_ptr<ButtonAttachment> buttonAttachment;
+    
+    Label title;
 
     JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR (ValvestateAudioProcessorEditor)
 };
