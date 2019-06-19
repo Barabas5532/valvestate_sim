@@ -55,6 +55,7 @@ void ValvestateAudioProcessorEditor::applySliderStyle(Slider &s)
 
 ValvestateAudioProcessorEditor::~ValvestateAudioProcessorEditor()
 {
+    setLookAndFeel(nullptr);
 }
 
 //==============================================================================
