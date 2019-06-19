@@ -17,7 +17,8 @@ public:
             float sliderPos, const float rotaryStartAngle, const float
             rotaryEndAngle, Slider& slider) override
     {
-        auto radius = jmin (width / 2, height / 2) - 20.0f;
+        float margin = 15;
+        auto radius = jmin (width / 2, height / 2) - margin;
         auto centreX = x + width  * 0.5f;
         auto centreY = y + height * 0.5f;
         auto rx = centreX - radius;
@@ -34,15 +35,6 @@ public:
         p.addEllipse (rx-10, ry-10, rw+20, rw+20);
         s.drawForPath(g, p);
 
-        // fill
-        g.setColour (GOLD);
-        g.fillEllipse (rx, ry, rw, rw);
-
-        // outline
-        g.setColour (Colours::black);
-        g.drawEllipse (rx, ry, rw, rw, 5.0f);
-
-
         // ticks
         g.setColour (Colours::black);
         auto tickLength = 15.0f;
@@ -54,32 +46,41 @@ public:
             if(i%2)
             {
                 float thickness = tickThickness/2;
-                p.addRectangle ( -thickness * 0.5f, -radius-5,
+                p.addRectangle ( -thickness * 0.5f, -radius,
                         thickness, -tickLength/2);
             }
             else
             {
-                p.addRectangle ( -tickThickness * 0.5f, -radius-5,
+                p.addRectangle ( -tickThickness * 0.5f, -radius,
                         tickThickness, -tickLength);
             }
 
             auto tmpAngle = rotaryStartAngle + i/(float)(nTicks-1) * (rotaryEndAngle - rotaryStartAngle);
 
-            if(tmpAngle*1.02 >= 3.14*3/2.0f && tmpAngle*0.98 <= 3.14*3/2.0f)
-                tmpAngle = 3.1415*3/2.0f;
+            //if(tmpAngle*1.02 >= 3.14*3/2.0f && tmpAngle*0.98 <= 3.14*3/2.0f)
+            //    tmpAngle = 3.1415*3/2.0f;
 
-            if(tmpAngle*1.02 >= 3.14*5/2.0f && tmpAngle*0.98 <= 3.14*5/2.0f)
-                tmpAngle = 3.1415*5/2.0f;
+            //if(tmpAngle*1.02 >= 3.14*5/2.0f && tmpAngle*0.98 <= 3.14*5/2.0f)
+            //    tmpAngle = 3.1415*5/2.0f;
 
             p.applyTransform (AffineTransform::rotation (tmpAngle).translated (centreX, centreY));
             g.fillPath (p);
         }
 
+        //knob body
+        Image knobImage = ImageFileFormat::loadFrom (BinaryData::knob_png,
+                (size_t)BinaryData::knob_pngSize);
+        //g.drawImage(knobImage, margin, centreY-(100-2*margin)/2, 100-2*margin, 100-2*margin, 0, 0, 200, 200);
+        AffineTransform transform;
+        transform = transform.scaled(2*radius/knobImage.getWidth(), 2*radius/knobImage.getHeight());
+        transform = transform.translated(margin, (height/2-radius));
+        g.drawImageTransformed(knobImage, transform);
+
         // pointer
         p.clear();
-        auto pointerLength = radius * 0.5f;
+        auto pointerLength = radius * 0.3f;
         auto pointerThickness = 3.0f;
-        p.addRectangle (-pointerThickness * 0.5f, -radius*0.8f, pointerThickness, pointerLength);
+        p.addRectangle (-pointerThickness * 0.5f, -radius*0.6f, pointerThickness, pointerLength);
         p.applyTransform (AffineTransform::rotation (angle).translated (centreX, centreY));
 
         g.setColour (Colours::black);

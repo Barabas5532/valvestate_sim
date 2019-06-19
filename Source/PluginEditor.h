@@ -45,5 +45,8 @@ private:
     
     Label title;
 
+    Label buttonLabel, gainLabel, bassLabel, middleLabel, trebleLabel, contourLabel,
+          volumeLabel;
+
     JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR (ValvestateAudioProcessorEditor)
 };

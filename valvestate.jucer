@@ -4,6 +4,9 @@
               companyName="Barabas Raffai" companyEmail="barabas.raffai@gmail.com"
               pluginFormats="buildStandalone,buildVST,buildVST3" pluginChannelConfigs="{1,1}">
   <MAINGROUP id="ssB7s4" name="valvestate">
+    <GROUP id="{70992A90-4292-1E5A-FAE3-48D7C8A030FB}" name="Images">
+      <FILE id="TSHQAo" name="knob.png" compile="0" resource="1" file="Images/knob.png"/>
+    </GROUP>
     <GROUP id="{49A785AE-4467-8ABE-AAB4-E0C97DD1A027}" name="Source">
       <FILE id="IOSu8W" name="UI.h" compile="0" resource="0" file="Source/UI.h"/>
       <FILE id="zFy2BZ" name="WaveShape.cpp" compile="1" resource="0" file="Source/WaveShape.cpp"/>

@@ -13,7 +13,15 @@
 
 //==============================================================================
 ValvestateAudioProcessorEditor::ValvestateAudioProcessorEditor (ValvestateAudioProcessor& p)
-    : AudioProcessorEditor (&p), processor (p), title("titleLabel", "Hybrid 8100")
+    : AudioProcessorEditor (&p), processor (p), 
+    title("titleLabel", "HYBRID 8100"), 
+    gainLabel("gainLabel", "GAIN"), 
+    buttonLabel("OD1/OD2"),
+    bassLabel("bassLabel", "BASS"), 
+    middleLabel("middleLabel", "MIDDLE"), 
+    trebleLabel("trebleLabel", "TREBLE"), 
+    contourLabel("contourLabel", "CONTOUR"), 
+    volumeLabel("volumeLabel", "VOLUME")
 {
     setLookAndFeel(&vsLookAndFeel);
 
@@ -33,7 +41,6 @@ ValvestateAudioProcessorEditor::ValvestateAudioProcessorEditor (ValvestateAudioP
 
     buttonAttachment.reset(new ButtonAttachment(processor.parameters, "od", button));
 
-    addAndMakeVisible(title);
     addAndMakeVisible(button);
     addAndMakeVisible(gain);
     addAndMakeVisible(bass);
@@ -42,15 +49,31 @@ ValvestateAudioProcessorEditor::ValvestateAudioProcessorEditor (ValvestateAudioP
     addAndMakeVisible(contour);
     addAndMakeVisible(volume);
 
+    addAndMakeVisible(title);
+    addAndMakeVisible(buttonLabel);
+    addAndMakeVisible(gainLabel);
+    addAndMakeVisible(gainLabel);
+    addAndMakeVisible(bassLabel);
+    addAndMakeVisible(middleLabel);
+    addAndMakeVisible(trebleLabel);
+    addAndMakeVisible(contourLabel);
+    addAndMakeVisible(volumeLabel);
+
     setSize (700, 300);
 }
 
 void ValvestateAudioProcessorEditor::applySliderStyle(Slider &s)
 {
+    Slider::RotaryParameters p;
+    p.startAngleRadians = 2*3.1415/12*7;
+    p.endAngleRadians = 2*3.1415/12*17;
+    p.stopAtEnd = true;
+
     s.setSliderStyle(Slider::RotaryHorizontalVerticalDrag);
     s.setTextBoxStyle(Slider::NoTextBox, false, 0, 0);
     s.setPopupDisplayEnabled(true, true, nullptr);
     s.setLookAndFeel(&vsLookAndFeel);
+    s.setRotaryParameters(p);
 }
 
 ValvestateAudioProcessorEditor::~ValvestateAudioProcessorEditor()
@@ -73,11 +96,20 @@ void ValvestateAudioProcessorEditor::resized()
 
     title.setBounds(area.removeFromTop(100));
 
-    button.setBounds(area.removeFromLeft(100));
-    gain.setBounds(area.removeFromLeft(100));
-    bass.setBounds(area.removeFromLeft(100));
-    middle.setBounds(area.removeFromLeft(100));
-    treble.setBounds(area.removeFromLeft(100));
-    contour.setBounds(area.removeFromLeft(100));
-    volume.setBounds(area.removeFromLeft(100));
+    auto knobArea = area.removeFromTop(150);
+    button.setBounds(knobArea.removeFromLeft(100));
+    gain.setBounds(knobArea.removeFromLeft(100));
+    bass.setBounds(knobArea.removeFromLeft(100));
+    middle.setBounds(knobArea.removeFromLeft(100));
+    treble.setBounds(knobArea.removeFromLeft(100));
+    contour.setBounds(knobArea.removeFromLeft(100));
+    volume.setBounds(knobArea.removeFromLeft(100));
+
+    buttonLabel.setBounds(area.removeFromLeft(100));
+    gainLabel.setBounds(area.removeFromLeft(100));
+    bassLabel.setBounds(area.removeFromLeft(100));
+    middleLabel.setBounds(area.removeFromLeft(100));
+    trebleLabel.setBounds(area.removeFromLeft(100));
+    contourLabel.setBounds(area.removeFromLeft(100));
+    volumeLabel.setBounds(area.removeFromLeft(100));
 }
