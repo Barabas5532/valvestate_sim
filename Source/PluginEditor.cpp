@@ -32,6 +32,15 @@ ValvestateAudioProcessorEditor::ValvestateAudioProcessorEditor (ValvestateAudioP
     applySliderStyle(contour);
     applySliderStyle(volume);
 
+    applyLabelStyle(buttonLabel);
+    applyLabelStyle(gainLabel);
+    applyLabelStyle(gainLabel);
+    applyLabelStyle(bassLabel);
+    applyLabelStyle(middleLabel);
+    applyLabelStyle(trebleLabel);
+    applyLabelStyle(contourLabel);
+    applyLabelStyle(volumeLabel);
+
     gainAttachment.reset(new SliderAttachment(processor.parameters, "gain", gain));
     bassAttachment.reset(new SliderAttachment(processor.parameters, "bass", bass));
     middleAttachment.reset(new SliderAttachment(processor.parameters, "middle", middle));
@@ -74,6 +83,13 @@ void ValvestateAudioProcessorEditor::applySliderStyle(Slider &s)
     s.setPopupDisplayEnabled(true, true, nullptr);
     s.setLookAndFeel(&vsLookAndFeel);
     s.setRotaryParameters(p);
+}
+
+void ValvestateAudioProcessorEditor::applyLabelStyle(Label &l)
+{
+    auto f = Font(20, Font::FontStyleFlags::bold);
+    l.setFont(f);
+    l.setJustificationType(Justification::centredTop);
 }
 
 ValvestateAudioProcessorEditor::~ValvestateAudioProcessorEditor()

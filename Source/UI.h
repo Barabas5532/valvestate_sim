@@ -11,6 +11,7 @@ public:
     {
         setColour (Slider::thumbColourId, Colours::red);
         setColour (ResizableWindow::backgroundColourId, GOLD);
+        setColour (Label::textColourId, Colours::black);
     }
 
     void drawRotarySlider (Graphics& g, int x, int y, int width, int height,

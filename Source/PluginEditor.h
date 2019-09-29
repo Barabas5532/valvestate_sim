@@ -29,6 +29,7 @@ public:
 
 private:
     void applySliderStyle(Slider &s);
+    void applyLabelStyle(Label &l);
     ValvestateAudioProcessor& processor;
 
     ValvestateLookAndFeel vsLookAndFeel;
