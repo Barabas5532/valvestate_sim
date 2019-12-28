@@ -72,12 +72,6 @@ ValvestateAudioProcessorEditor::ValvestateAudioProcessorEditor (ValvestateAudioP
     setSize (700, 300);
 }
 
-void ValvestateAudioProcessorEditor::applyLabelStyle(Label &l)
-{
-    l.setJustificationType(Justification(Justification::centred));
-    l.setFont(Font(20));
-}
-
 void ValvestateAudioProcessorEditor::applySliderStyle(Slider &s)
 {
     Slider::RotaryParameters p;
@@ -90,6 +84,13 @@ void ValvestateAudioProcessorEditor::applySliderStyle(Slider &s)
     s.setPopupDisplayEnabled(true, true, nullptr);
     s.setLookAndFeel(&vsLookAndFeel);
     s.setRotaryParameters(p);
+}
+
+void ValvestateAudioProcessorEditor::applyLabelStyle(Label &l)
+{
+    auto f = Font(20, Font::FontStyleFlags::bold);
+    l.setFont(f);
+    l.setJustificationType(Justification::centredTop);
 }
 
 ValvestateAudioProcessorEditor::~ValvestateAudioProcessorEditor()
