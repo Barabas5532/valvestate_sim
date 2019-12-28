@@ -1,11 +1,20 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
-<JUCERPROJECT id="oFNplh" name="valvestate" projectType="audioplug" jucerVersion="5.4.3"
+<JUCERPROJECT id="oFNplh" name="valvestate" projectType="audioplug" jucerVersion="5.4.4"
               companyName="Barabas Raffai" companyEmail="barabas.raffai@gmail.com"
               pluginFormats="buildStandalone,buildVST,buildVST3" pluginChannelConfigs="{1,1}">
   <MAINGROUP id="ssB7s4" name="valvestate">
     <GROUP id="{70992A90-4292-1E5A-FAE3-48D7C8A030FB}" name="Images">
       <FILE id="TSHQAo" name="knob.png" compile="0" resource="1" file="Images/knob.png"/>
+      <FILE id="geS5rm" name="knob0.png" compile="0" resource="1" file="Images/knob0.png"/>
+      <FILE id="Kf5rUT" name="knob1.png" compile="0" resource="1" file="Images/knob1.png"/>
+      <FILE id="sfB1jP" name="knob2.png" compile="0" resource="1" file="Images/knob2.png"/>
+      <FILE id="J0q8xP" name="knob3.png" compile="0" resource="1" file="Images/knob3.png"/>
+      <FILE id="q1ZerO" name="knob4.png" compile="0" resource="1" file="Images/knob4.png"/>
+      <FILE id="AMHAOX" name="switchcentre.png" compile="0" resource="1"
+            file="Images/switchcentre.png"/>
+      <FILE id="DB0G0L" name="switchdown.png" compile="0" resource="1" file="Images/switchdown.png"/>
+      <FILE id="zMHpqS" name="switchup.png" compile="0" resource="1" file="Images/switchup.png"/>
     </GROUP>
     <GROUP id="{49A785AE-4467-8ABE-AAB4-E0C97DD1A027}" name="Source">
       <FILE id="IOSu8W" name="UI.h" compile="0" resource="0" file="Source/UI.h"/>

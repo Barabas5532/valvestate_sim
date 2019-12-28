@@ -28,6 +28,7 @@ public:
     void resized() override;
 
 private:
+    void applyLabelStyle(Label &l);
     void applySliderStyle(Slider &s);
     ValvestateAudioProcessor& processor;
 

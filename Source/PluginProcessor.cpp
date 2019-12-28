@@ -166,7 +166,7 @@ void ValvestateAudioProcessor::processBlock (AudioBuffer<float>& buffer, MidiBuf
     fmv.process(context);
     contour.process(context);
 
-    block.multiply(Decibels::decibelsToGain(*volume));
+    block.multiplyBy(Decibels::decibelsToGain(*volume));
 }
 
 //==============================================================================

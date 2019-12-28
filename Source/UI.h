@@ -11,6 +11,7 @@ public:
     {
         setColour (Slider::thumbColourId, Colours::red);
         setColour (ResizableWindow::backgroundColourId, GOLD);
+        setColour (Label::textColourId, Colours::black);
     }
 
     void drawRotarySlider (Graphics& g, int x, int y, int width, int height,
@@ -29,10 +30,12 @@ public:
         // shadow
         Point<int> point(0, 0);
         Colour shadowColour(0x55000000);
-        DropShadow s(shadowColour, 10, point);
+        auto shadowSize = 10;
+
+        DropShadow s(shadowColour, shadowSize, point);
         Path p;
 
-        p.addEllipse (rx-10, ry-10, rw+20, rw+20);
+        p.addEllipse (rx-shadowSize/2.0f, ry-shadowSize/2.0f, rw+shadowSize, rw+shadowSize);
         s.drawForPath(g, p);
 
         // ticks
@@ -68,13 +71,23 @@ public:
         }
 
         //knob body
-        Image knobImage = ImageFileFormat::loadFrom (BinaryData::knob_png,
-                (size_t)BinaryData::knob_pngSize);
+        Image knobImage[5];
+        knobImage[0] = ImageCache::getFromMemory (BinaryData::knob0_png,
+                (size_t)BinaryData::knob0_pngSize);
+        knobImage[1] = ImageCache::getFromMemory (BinaryData::knob1_png,
+                (size_t)BinaryData::knob1_pngSize);
+        knobImage[2] = ImageCache::getFromMemory (BinaryData::knob2_png,
+                (size_t)BinaryData::knob2_pngSize);
+        knobImage[3] = ImageCache::getFromMemory (BinaryData::knob3_png,
+                (size_t)BinaryData::knob3_pngSize);
+        knobImage[4] = ImageCache::getFromMemory (BinaryData::knob4_png,
+                (size_t)BinaryData::knob4_pngSize);
         //g.drawImage(knobImage, margin, centreY-(100-2*margin)/2, 100-2*margin, 100-2*margin, 0, 0, 200, 200);
         AffineTransform transform;
-        transform = transform.scaled(2*radius/knobImage.getWidth(), 2*radius/knobImage.getHeight());
+        transform = transform.scaled(2*radius/knobImage[0].getWidth(), 2*radius/knobImage[0].getHeight());
         transform = transform.translated(margin, (height/2-radius));
-        g.drawImageTransformed(knobImage, transform);
+        int index = (int)(angle/2.0f/3.1415f*24*5) % 5;
+        g.drawImageTransformed(knobImage[index], transform);
 
         // pointer
         p.clear();
@@ -90,25 +103,37 @@ public:
     void drawToggleButton(Graphics &g, ToggleButton &b, 
             bool shouldDrawButtonAsHighlighted, bool shouldDrawButtonAsDown)
     {
-        const int buttonSize = 40;
-        const int outlineThickness = 3;
+        auto width = b.getWidth();
+        auto height = b.getHeight();
+        float margin = 15;
+        auto radius = jmin (width / 2, height / 2) - margin;
+
+        Image switchImage[5];
+        switchImage[0] = ImageCache::getFromMemory (BinaryData::switchup_png,
+                (size_t)BinaryData::switchup_png);
+        switchImage[1] = ImageCache::getFromMemory (BinaryData::switchcentre_png,
+                (size_t)BinaryData::switchcentre_pngSize);
+        switchImage[2] = ImageCache::getFromMemory (BinaryData::switchdown_png,
+                (size_t)BinaryData::switchdown_pngSize);
+        int index;
+
         auto centreX = b.getWidth()/2;
         auto centreY = b.getHeight()/2;
 
-        g.setColour (Colours::black);
-
-        g.drawRect(centreX-buttonSize, centreY-buttonSize/2, buttonSize,
-                buttonSize, outlineThickness);
-        g.drawRect(centreX, centreY-buttonSize/2, buttonSize,
-                buttonSize, outlineThickness);
         if(b.getToggleState())
         {
-            g.fillRect(centreX, centreY-buttonSize/2, buttonSize, buttonSize);
+            //draw up switch
+            index = 0;
         }
         else
         {
-            g.fillRect(centreX-buttonSize, centreY-buttonSize/2, buttonSize,
-                buttonSize);
+            //draw down switch
+            index = 2;
         }
+
+        AffineTransform transform;
+        transform = transform.scaled(2*radius/switchImage[0].getWidth(), 2*radius/switchImage[0].getHeight());
+        transform = transform.translated(margin, (height/2-radius));
+        g.drawImageTransformed(switchImage[index], transform);
     }
 };
