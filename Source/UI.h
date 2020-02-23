@@ -27,22 +27,12 @@ public:
         auto rw = radius * 2.0f;
         auto angle = rotaryStartAngle + sliderPos * (rotaryEndAngle - rotaryStartAngle);
 
-        // shadow
-        Point<int> point(0, 0);
-        Colour shadowColour(0x55000000);
-        auto shadowSize = 10;
-
-        DropShadow s(shadowColour, shadowSize, point);
-        Path p;
-
-        p.addEllipse (rx-shadowSize/2.0f, ry-shadowSize/2.0f, rw+shadowSize, rw+shadowSize);
-        s.drawForPath(g, p);
-
         // ticks
         g.setColour (Colours::black);
         auto tickLength = 15.0f;
         auto tickThickness = 3.0f;
         int nTicks = 21;
+        Path p;
         for (int i = 0; i < nTicks; ++i)
         {
             p.clear();
@@ -71,29 +61,19 @@ public:
         }
 
         //knob body
-        Image knobImage[5];
-        knobImage[0] = ImageCache::getFromMemory (BinaryData::knob0_png,
-                (size_t)BinaryData::knob0_pngSize);
-        knobImage[1] = ImageCache::getFromMemory (BinaryData::knob1_png,
-                (size_t)BinaryData::knob1_pngSize);
-        knobImage[2] = ImageCache::getFromMemory (BinaryData::knob2_png,
-                (size_t)BinaryData::knob2_pngSize);
-        knobImage[3] = ImageCache::getFromMemory (BinaryData::knob3_png,
-                (size_t)BinaryData::knob3_pngSize);
-        knobImage[4] = ImageCache::getFromMemory (BinaryData::knob4_png,
-                (size_t)BinaryData::knob4_pngSize);
-        //g.drawImage(knobImage, margin, centreY-(100-2*margin)/2, 100-2*margin, 100-2*margin, 0, 0, 200, 200);
-        AffineTransform transform;
-        transform = transform.scaled(2*radius/knobImage[0].getWidth(), 2*radius/knobImage[0].getHeight());
-        transform = transform.translated(margin, (height/2-radius));
-        int index = (int)(angle/2.0f/3.1415f*24*5) % 5;
-        g.drawImageTransformed(knobImage[index], transform);
+        g.setColour(Colours::black);
+        g.fillEllipse(centreX-radius, centreY-radius, 2*radius, 2*radius);
+
+        g.setColour(GOLD);
+        auto insideRadius = radius - 5;
+        g.fillEllipse(centreX-insideRadius, centreY-insideRadius,
+                2*insideRadius, 2*insideRadius);
 
         // pointer
         p.clear();
-        auto pointerLength = radius * 0.3f;
-        auto pointerThickness = 3.0f;
-        p.addRectangle (-pointerThickness * 0.5f, -radius*0.6f, pointerThickness, pointerLength);
+        auto pointerLength = radius * 0.5f;
+        auto pointerThickness = 5.0f;
+        p.addRectangle (-pointerThickness * 0.5f, -radius*0.7f, pointerThickness, pointerLength);
         p.applyTransform (AffineTransform::rotation (angle).translated (centreX, centreY));
 
         g.setColour (Colours::black);
