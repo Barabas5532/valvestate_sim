@@ -16,7 +16,7 @@ ValvestateAudioProcessorEditor::ValvestateAudioProcessorEditor (ValvestateAudioP
     : AudioProcessorEditor (&p), processor (p), 
     title("titleLabel", "HYBRID 8100"), 
     gainLabel("gainLabel", "GAIN"), 
-    buttonLabel("OD1/OD2"),
+    buttonLabel("OD1/OD2", "MODE"),
     bassLabel("bassLabel", "BASS"), 
     middleLabel("middleLabel", "MIDDLE"), 
     trebleLabel("trebleLabel", "TREBLE"), 
@@ -33,7 +33,7 @@ ValvestateAudioProcessorEditor::ValvestateAudioProcessorEditor (ValvestateAudioP
     applySliderStyle(volume);
 
     applyLabelStyle(title);
-    title.setFont(Font(30));
+    title.setFont(Font(50));
     applyLabelStyle(gainLabel);
     applyLabelStyle(buttonLabel);
     applyLabelStyle(bassLabel);
@@ -50,6 +50,7 @@ ValvestateAudioProcessorEditor::ValvestateAudioProcessorEditor (ValvestateAudioP
     volumeAttachment.reset(new SliderAttachment(processor.parameters, "volume", volume));
 
     buttonAttachment.reset(new ButtonAttachment(processor.parameters, "od", button));
+    button.onClick = [this] { this->repaint(); };
 
     addAndMakeVisible(button);
     addAndMakeVisible(gain);
@@ -69,7 +70,7 @@ ValvestateAudioProcessorEditor::ValvestateAudioProcessorEditor (ValvestateAudioP
     addAndMakeVisible(contourLabel);
     addAndMakeVisible(volumeLabel);
 
-    setSize (700, 300);
+    setSize (700, 200);
 }
 
 void ValvestateAudioProcessorEditor::applySliderStyle(Slider &s)
@@ -111,9 +112,9 @@ void ValvestateAudioProcessorEditor::resized()
     // subcomponents in your editor..
     Rectangle<int> area = getLocalBounds();
 
-    title.setBounds(area.removeFromTop(100));
+    title.setBounds(area.removeFromTop(70));
 
-    auto knobArea = area.removeFromTop(150);
+    auto knobArea = area.removeFromTop(100);
     button.setBounds(knobArea.removeFromLeft(100));
     gain.setBounds(knobArea.removeFromLeft(100));
     bass.setBounds(knobArea.removeFromLeft(100));

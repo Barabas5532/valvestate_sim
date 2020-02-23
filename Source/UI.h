@@ -3,15 +3,20 @@
 #include "../JuceLibraryCode/JuceHeader.h"
 
 const Colour GOLD(0xffa1781b);
+const Colour DARKER(0xff111111);
+const Colour DARK(0xff222222);
+const Colour LIGHT(0xff555555);
 
 class ValvestateLookAndFeel : public LookAndFeel_V4
 {
 public:
     ValvestateLookAndFeel()
     {
-        setColour (Slider::thumbColourId, Colours::red);
-        setColour (ResizableWindow::backgroundColourId, GOLD);
-        setColour (Label::textColourId, Colours::black);
+        setColour (Slider::thumbColourId, GOLD);
+        setColour (Slider::rotarySliderOutlineColourId, DARK);
+        setColour (Slider::rotarySliderFillColourId, DARKER);
+        setColour (ResizableWindow::backgroundColourId, Colours::black);
+        setColour (Label::textColourId, LIGHT);
     }
 
     void drawRotarySlider (Graphics& g, int x, int y, int width, int height,
@@ -28,7 +33,7 @@ public:
         auto angle = rotaryStartAngle + sliderPos * (rotaryEndAngle - rotaryStartAngle);
 
         // ticks
-        g.setColour (Colours::black);
+        g.setColour (slider.findColour (Slider::rotarySliderOutlineColourId));
         auto tickLength = 15.0f;
         auto tickThickness = 3.0f;
         int nTicks = 21;
@@ -61,10 +66,10 @@ public:
         }
 
         //knob body
-        g.setColour(Colours::black);
+        g.setColour (slider.findColour (Slider::rotarySliderOutlineColourId));
         g.fillEllipse(centreX-radius, centreY-radius, 2*radius, 2*radius);
 
-        g.setColour(GOLD);
+        g.setColour(slider.findColour(Slider::rotarySliderFillColourId));
         auto insideRadius = radius - 5;
         g.fillEllipse(centreX-insideRadius, centreY-insideRadius,
                 2*insideRadius, 2*insideRadius);
@@ -76,7 +81,7 @@ public:
         p.addRectangle (-pointerThickness * 0.5f, -radius*0.7f, pointerThickness, pointerLength);
         p.applyTransform (AffineTransform::rotation (angle).translated (centreX, centreY));
 
-        g.setColour (Colours::black);
+        g.setColour (slider.findColour(Slider::thumbColourId));
         g.fillPath (p);
     }
 
@@ -85,35 +90,42 @@ public:
     {
         auto width = b.getWidth();
         auto height = b.getHeight();
-        float margin = 15;
-        auto radius = jmin (width / 2, height / 2) - margin;
 
-        Image switchImage[5];
-        switchImage[0] = ImageCache::getFromMemory (BinaryData::switchup_png,
-                (size_t)BinaryData::switchup_png);
-        switchImage[1] = ImageCache::getFromMemory (BinaryData::switchcentre_png,
-                (size_t)BinaryData::switchcentre_pngSize);
-        switchImage[2] = ImageCache::getFromMemory (BinaryData::switchdown_png,
-                (size_t)BinaryData::switchdown_pngSize);
-        int index;
+        //width and height of actual buttons
+        auto w = 80;
+        auto h = 40;
 
         auto centreX = b.getWidth()/2;
         auto centreY = b.getHeight()/2;
 
-        if(b.getToggleState())
-        {
-            //draw up switch
-            index = 0;
-        }
-        else
-        {
-            //draw down switch
-            index = 2;
-        }
+        Rectangle<int> topHalf(centreX - w/2, centreY - h, w, h);
+        Rectangle<int> bottomHalf(centreX - w/2, centreY, w, h);
 
-        AffineTransform transform;
-        transform = transform.scaled(2*radius/switchImage[0].getWidth(), 2*radius/switchImage[0].getHeight());
-        transform = transform.translated(margin, (height/2-radius));
-        g.drawImageTransformed(switchImage[index], transform);
+        g.setFont(Font(20, Font::FontStyleFlags::bold));
+
+        //set slider thumb colours
+        setColour (Slider::thumbColourId, b.getToggleState() ? Colours::red : GOLD); 
+
+        //draw top half (OD1)
+        g.setColour (b.getToggleState() ? findColour(Slider::rotarySliderFillColourId) : GOLD);
+        g.fillRect (topHalf);
+
+        g.setColour (findColour (Slider::rotarySliderOutlineColourId));
+        g.drawText("OD1", topHalf, Justification::centred);
+
+        //draw bottom half (OD2)
+        g.setColour (b.getToggleState() ? Colours::red : findColour(Slider::rotarySliderFillColourId));
+        g.fillRect (bottomHalf);
+
+        g.setColour (findColour (Slider::rotarySliderOutlineColourId));
+        g.drawText("OD2", bottomHalf, Justification::centred);
+
+        //draw outline
+        Path outline;
+        outline.addRectangle(centreX - w/2, centreY - h, w, 2*h);
+        outline.addRectangle(centreX - w/2, centreY, w, 0);
+
+        g.setColour (findColour (Slider::rotarySliderOutlineColourId));
+        g.strokePath(outline, PathStrokeType(3));
     }
 };
