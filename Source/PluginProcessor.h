@@ -48,13 +48,13 @@ public:
     AudioProcessorValueTreeState parameters;
 
 private:
-    float *od;
-    float *gain;
-    float *bass;
-    float *middle;
-    float *treble;
-    float *contourP;
-    float *volume;
+    std::atomic<float> *od = nullptr;
+    std::atomic<float> *gain = nullptr;
+    std::atomic<float> *bass = nullptr;
+    std::atomic<float> *middle = nullptr;
+    std::atomic<float> *treble = nullptr;
+    std::atomic<float> *contourP = nullptr;
+    std::atomic<float> *volume = nullptr;
 
     InputFilter input;
     GainControl gaincontrol;
