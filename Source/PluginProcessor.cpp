@@ -1,8 +1,36 @@
-#include "PluginProcessor.h"
-#include "PluginEditor.h"
+/*
+    Copyright 2020 Barabas Raffai
 
-ValvestateAudioProcessor::ValvestateAudioProcessor() : logRange(0, 1, 0.0001, 0.3), parameters(*this,
-        nullptr, "PARAMETERS", 
+    This file is part of Valvestate Sim.
+
+    Valvestate Sim is free software: you can redistribute it and/or modify it
+    under the terms of the GNU General Public License as published by the Free
+    Software Foundation, either version 3 of the License, or (at your option)
+    any later version.
+
+    Valvestate Sim is distributed in the hope that it will be useful, but
+    WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY
+    or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License
+    for more details.
+
+    You should have received a copy of the GNU General Public License along
+    with Valvestate Sim.  If not, see <https://www.gnu.org/licenses/>.
+*/
+
+#include "PluginProcessor.h"
+#include "ui/PluginEditor.h"
+
+ValvestateAudioProcessor::ValvestateAudioProcessor() : 
+     AudioProcessor (BusesProperties()
+                     #if ! JucePlugin_IsMidiEffect
+                      #if ! JucePlugin_IsSynth
+                       .withInput  ("Input",  AudioChannelSet::stereo(), true)
+                      #endif
+                       .withOutput ("Output", AudioChannelSet::stereo(), true)
+                     #endif
+                       ),
+    logRange(0, 1, 0.0001, 0.3),
+    parameters(*this, nullptr, "PARAMETERS",
         {
         std::make_unique<AudioParameterBool>  ("od", "OD1/OD2", false),
         std::make_unique<AudioParameterFloat> ("gain", "Gain", logRange, logRange.convertFrom0to1(0.5)),
@@ -11,18 +39,8 @@ ValvestateAudioProcessor::ValvestateAudioProcessor() : logRange(0, 1, 0.0001, 0.
         std::make_unique<AudioParameterFloat> ("treble", "Treble", 0, 1, 0.5),
         //contour gets unstable when set to 0
         std::make_unique<AudioParameterFloat> ("contour", "Contour", 0.01, 1, 0.5),
-        std::make_unique<AudioParameterFloat> ("volume", "Volume", 20, 50, 35)
+        std::make_unique<AudioParameterFloat> ("volume", "Volume", 20, 50, 35),
         })
-#ifndef JucePlugin_PreferredChannelConfigurations
-     ,AudioProcessor (BusesProperties()
-                     #if ! JucePlugin_IsMidiEffect
-                      #if ! JucePlugin_IsSynth
-                       .withInput  ("Input",  AudioChannelSet::stereo(), true)
-                      #endif
-                       .withOutput ("Output", AudioChannelSet::stereo(), true)
-                     #endif
-                       )
-#endif
 {
     od = parameters.getRawParameterValue("od");
     gain = parameters.getRawParameterValue("gain");
@@ -88,15 +106,19 @@ int ValvestateAudioProcessor::getCurrentProgram()
 
 void ValvestateAudioProcessor::setCurrentProgram (int index)
 {
+    (void) index;
 }
 
 const String ValvestateAudioProcessor::getProgramName (int index)
 {
+    (void) index;
     return {};
 }
 
 void ValvestateAudioProcessor::changeProgramName (int index, const String& newName)
 {
+    (void) index;
+    (void) newName;
 }
 
 //==============================================================================
@@ -104,7 +126,8 @@ void ValvestateAudioProcessor::prepareToPlay (double sampleRate, int samplesPerB
 {
     dsp::ProcessSpec spec;
     spec.sampleRate = sampleRate;
-    spec.maximumBlockSize = samplesPerBlock;
+    jassert(samplesPerBlock >= 0);
+    spec.maximumBlockSize = (juce::uint32)samplesPerBlock;
     spec.numChannels = 1;
 
     input.prepare(spec);
@@ -123,7 +146,6 @@ void ValvestateAudioProcessor::releaseResources()
     contour.reset();
 }
 
-#ifndef JucePlugin_PreferredChannelConfigurations
 bool ValvestateAudioProcessor::isBusesLayoutSupported (const BusesLayout& layouts) const
 {
   #if JucePlugin_IsMidiEffect
@@ -145,13 +167,16 @@ bool ValvestateAudioProcessor::isBusesLayoutSupported (const BusesLayout& layout
     return true;
   #endif
 }
-#endif
 
 void ValvestateAudioProcessor::processBlock (AudioBuffer<float>& buffer, MidiBuffer& midiMessages)
 {
+    (void) midiMessages;
+
     ScopedNoDenormals noDenormals;
 
-    dsp::AudioBlock<float> block(buffer);
+    float *input_samples = buffer.getWritePointer(0);
+
+    dsp::AudioBlock<float> block(&input_samples, 1, (size_t)buffer.getNumSamples());
     dsp::ProcessContextReplacing<float> context(block);
 
     //set parameters
@@ -165,8 +190,13 @@ void ValvestateAudioProcessor::processBlock (AudioBuffer<float>& buffer, MidiBuf
     clipping.process(block);
     fmv.process(context);
     contour.process(context);
+    block.multiplyBy(Decibels::decibelsToGain((float)*volume));
 
-    block.multiplyBy(Decibels::decibelsToGain(*volume));
+    // copy processed samples to the right channel
+    for(int i = 0; i < buffer.getNumSamples(); i++)
+    {
+        buffer.setSample(1, i, input_samples[i]);
+    }
 }
 
 //==============================================================================
@@ -178,7 +208,6 @@ bool ValvestateAudioProcessor::hasEditor() const
 AudioProcessorEditor* ValvestateAudioProcessor::createEditor()
 {
     return new ValvestateAudioProcessorEditor (*this);
-    //return new GenericAudioProcessorEditor(this);
 }
 
 //==============================================================================

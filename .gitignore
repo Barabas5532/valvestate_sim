@@ -1,4 +1,8 @@
-Builds/
-JuceLibraryCode/
-compile_commands.json
-install.sh
+build
+.ipynb_checkpoints
+
+# generated files from LTSpice
+*.log
+*.net
+*.raw
+*.plt
