@@ -10,7 +10,6 @@
 
 #pragma once
 #include "../JuceLibraryCode/JuceHeader.h"
-#include "WaveShape.h"
 
 class Clipping
 {
