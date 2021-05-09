@@ -1,7 +1,8 @@
 #include "Clipping.h"
 #define OVERSAMPLING_ORDER 3
 
-Clipping::Clipping() : oversampling(1, OVERSAMPLING_ORDER,
+//TODO make the plugin mono
+Clipping::Clipping() : oversampling(2, OVERSAMPLING_ORDER,
         dsp::Oversampling<float>::filterHalfBandPolyphaseIIR)
 {
     waveshaper.functionToUse = waveshape;
