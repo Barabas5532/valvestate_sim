@@ -19,5 +19,5 @@ class GainControl
         float sampleRate;
 
         dsp::IIR::Filter<float> filter;
-        JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR(GainControl);
+        JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR(GainControl)
 };

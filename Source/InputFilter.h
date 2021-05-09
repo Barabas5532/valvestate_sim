@@ -16,5 +16,5 @@ class InputFilter
     private:
     dsp::IIR::Filter<float> filter;
 
-    JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR(InputFilter);
+    JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR(InputFilter)
 };

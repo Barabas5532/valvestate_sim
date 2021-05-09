@@ -27,9 +27,6 @@ public:
         auto radius = jmin (width / 2, height / 2) - margin;
         auto centreX = x + width  * 0.5f;
         auto centreY = y + height * 0.5f;
-        auto rx = centreX - radius;
-        auto ry = centreY - radius;
-        auto rw = radius * 2.0f;
         auto angle = rotaryStartAngle + sliderPos * (rotaryEndAngle - rotaryStartAngle);
 
         // ticks
@@ -54,12 +51,6 @@ public:
             }
 
             auto tmpAngle = rotaryStartAngle + i/(float)(nTicks-1) * (rotaryEndAngle - rotaryStartAngle);
-
-            //if(tmpAngle*1.02 >= 3.14*3/2.0f && tmpAngle*0.98 <= 3.14*3/2.0f)
-            //    tmpAngle = 3.1415*3/2.0f;
-
-            //if(tmpAngle*1.02 >= 3.14*5/2.0f && tmpAngle*0.98 <= 3.14*5/2.0f)
-            //    tmpAngle = 3.1415*5/2.0f;
 
             p.applyTransform (AffineTransform::rotation (tmpAngle).translated (centreX, centreY));
             g.fillPath (p);
@@ -88,8 +79,8 @@ public:
     void drawToggleButton(Graphics &g, ToggleButton &b, 
             bool shouldDrawButtonAsHighlighted, bool shouldDrawButtonAsDown)
     {
-        auto width = b.getWidth();
-        auto height = b.getHeight();
+        (void) shouldDrawButtonAsHighlighted;
+        (void) shouldDrawButtonAsDown;
 
         //width and height of actual buttons
         auto w = 80;

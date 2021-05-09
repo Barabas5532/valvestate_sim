@@ -15,8 +15,8 @@
 ValvestateAudioProcessorEditor::ValvestateAudioProcessorEditor (ValvestateAudioProcessor& p)
     : AudioProcessorEditor (&p), processor (p), 
     title("titleLabel", "HYBRID 8100"), 
-    gainLabel("gainLabel", "GAIN"), 
     buttonLabel("OD1/OD2", "MODE"),
+    gainLabel("gainLabel", "GAIN"), 
     bassLabel("bassLabel", "BASS"), 
     middleLabel("middleLabel", "MIDDLE"), 
     trebleLabel("trebleLabel", "TREBLE"), 

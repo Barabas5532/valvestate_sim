@@ -26,5 +26,5 @@ class Clipping
         dsp::WaveShaper<float> waveshaper;
         dsp::Oversampling<float> oversampling;
 
-        JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR(Clipping);
+        JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR(Clipping)
 };

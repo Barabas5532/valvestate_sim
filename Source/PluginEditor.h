@@ -41,14 +41,22 @@ private:
     Slider gain, bass, middle, treble, contour, volume;
     ToggleButton button;
 
-    std::unique_ptr<SliderAttachment> gainAttachment, bassAttachment, middleAttachment,
-                     trebleAttachment, contourAttachment, volumeAttachment;
+    std::unique_ptr<SliderAttachment> gainAttachment;
+    std::unique_ptr<SliderAttachment> bassAttachment;
+    std::unique_ptr<SliderAttachment> middleAttachment;
+    std::unique_ptr<SliderAttachment> trebleAttachment;
+    std::unique_ptr<SliderAttachment> contourAttachment;
+    std::unique_ptr<SliderAttachment> volumeAttachment;
     std::unique_ptr<ButtonAttachment> buttonAttachment;
-    
-    Label title;
 
-    Label buttonLabel, gainLabel, bassLabel, middleLabel, trebleLabel, contourLabel,
-          volumeLabel;
+    Label title;
+    Label buttonLabel;
+    Label gainLabel;
+    Label bassLabel;
+    Label middleLabel;
+    Label trebleLabel;
+    Label contourLabel;
+    Label volumeLabel;
 
     JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR (ValvestateAudioProcessorEditor)
 };
