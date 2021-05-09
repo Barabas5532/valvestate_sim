@@ -1,8 +1,7 @@
 #include "Clipping.h"
 #define OVERSAMPLING_ORDER 3
 
-//TODO make the plugin mono
-Clipping::Clipping() : oversampling(2, OVERSAMPLING_ORDER,
+Clipping::Clipping() : oversampling(1, OVERSAMPLING_ORDER,
         dsp::Oversampling<float>::filterHalfBandPolyphaseIIR)
 {
     waveshaper.functionToUse = waveshape;
@@ -12,13 +11,15 @@ Clipping::~Clipping() {}
 
 void Clipping::process(dsp::AudioBlock<float> block)
 {
-    auto oversampledBlock = oversampling.processSamplesUp(block);
+    // TODO fix oversampling. When added, audio cuts out after a split second.
+    //auto oversampledBlock = oversampling.processSamplesUp(block);
 
-    dsp::ProcessContextReplacing<float> ctx(oversampledBlock);
+    dsp::ProcessContextReplacing<float> ctx(block);
     waveshaper.process(ctx);
 
-    oversampling.processSamplesDown(block);
+    //oversampling.processSamplesDown(block);
 }
+
 void Clipping::prepare(dsp::ProcessSpec spec)
 {
     oversampling.initProcessing(spec.maximumBlockSize);

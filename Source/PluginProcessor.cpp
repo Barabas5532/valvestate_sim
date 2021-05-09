@@ -159,7 +159,9 @@ void ValvestateAudioProcessor::processBlock (AudioBuffer<float>& buffer, MidiBuf
 
     ScopedNoDenormals noDenormals;
 
-    dsp::AudioBlock<float> block(buffer);
+    float *input_samples = buffer.getWritePointer(0);
+
+    dsp::AudioBlock<float> block(&input_samples, 1, (size_t)buffer.getNumSamples());
     dsp::ProcessContextReplacing<float> context(block);
 
     //set parameters
@@ -175,6 +177,12 @@ void ValvestateAudioProcessor::processBlock (AudioBuffer<float>& buffer, MidiBuf
     contour.process(context);
 
     block.multiplyBy(Decibels::decibelsToGain((float)*volume));
+
+    // copy processed samples to the right channel
+    for(int i = 0; i < buffer.getNumSamples(); i++)
+    {
+        buffer.setSample(1, i, input_samples[i]);
+    }
 }
 
 //==============================================================================
