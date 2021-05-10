@@ -2,7 +2,6 @@
 #include "PluginEditor.h"
 
 ValvestateAudioProcessor::ValvestateAudioProcessor() : 
-#ifndef JucePlugin_PreferredChannelConfigurations
      AudioProcessor (BusesProperties()
                      #if ! JucePlugin_IsMidiEffect
                       #if ! JucePlugin_IsSynth
@@ -11,7 +10,6 @@ ValvestateAudioProcessor::ValvestateAudioProcessor() :
                        .withOutput ("Output", AudioChannelSet::stereo(), true)
                      #endif
                        ),
-#endif
     logRange(0, 1, 0.0001, 0.3),
     parameters(*this, nullptr, "PARAMETERS",
         {
@@ -129,7 +127,6 @@ void ValvestateAudioProcessor::releaseResources()
     contour.reset();
 }
 
-#ifndef JucePlugin_PreferredChannelConfigurations
 bool ValvestateAudioProcessor::isBusesLayoutSupported (const BusesLayout& layouts) const
 {
   #if JucePlugin_IsMidiEffect
@@ -151,7 +148,6 @@ bool ValvestateAudioProcessor::isBusesLayoutSupported (const BusesLayout& layout
     return true;
   #endif
 }
-#endif
 
 void ValvestateAudioProcessor::processBlock (AudioBuffer<float>& buffer, MidiBuffer& midiMessages)
 {
@@ -194,7 +190,6 @@ bool ValvestateAudioProcessor::hasEditor() const
 AudioProcessorEditor* ValvestateAudioProcessor::createEditor()
 {
     return new ValvestateAudioProcessorEditor (*this);
-    //return new GenericAudioProcessorEditor(this);
 }
 
 //==============================================================================
