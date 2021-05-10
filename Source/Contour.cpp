@@ -27,7 +27,7 @@ ContourFilter::ContourFilter()
     setParameter(0.5);
 }
 
-ContourFilter::~ContourFilter(){};
+ContourFilter::~ContourFilter(){}
 
 void ContourFilter::prepare(dsp::ProcessSpec spec)
 {

@@ -38,5 +38,5 @@ class ContourFilter
     dsp::IIR::Filter<float> filter;
     float sampleRate;
 
-    JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR(ContourFilter);
+    JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR(ContourFilter)
 };

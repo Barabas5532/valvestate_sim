@@ -19,8 +19,8 @@
 
 #include "GainControl.h"
 
-GainControl::GainControl(){};
-GainControl::~GainControl(){};
+GainControl::GainControl(){}
+GainControl::~GainControl(){}
 
 void GainControl::setParameters(float g, float channel)
 {

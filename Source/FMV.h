@@ -38,5 +38,5 @@ class FMVFilter
     dsp::IIR::Filter<float> filter;
     float sampleRate;
 
-    JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR(FMVFilter);
+    JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR(FMVFilter)
 };
