@@ -2,6 +2,13 @@
 #include "WaveShape.h"
 #define OVERSAMPLING_ORDER 3
 
+/* TODO using IIR filter here causes the audio to mute after some random amount
+ * of time, generally a few seconds. Investigate why that's happening.
+ *
+ *  - Using double processing doesn't help, and it breaks even when all other
+ *  processsing is bypassed, so probably not related to numerical stability of
+ *  IIR filter
+ */
 Clipping::Clipping() : oversampling(1, OVERSAMPLING_ORDER,
         dsp::Oversampling<float>::filterHalfBandFIREquiripple)
 {
