@@ -23,6 +23,7 @@ ValvestateAudioProcessorEditor::ValvestateAudioProcessorEditor (ValvestateAudioP
     contourLabel("contourLabel", "CONTOUR"), 
     volumeLabel("volumeLabel", "VOLUME")
 {
+    setResizable(false, false);
     setLookAndFeel(&vsLookAndFeel);
 
     applySliderStyle(gain);
