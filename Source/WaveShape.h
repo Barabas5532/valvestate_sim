@@ -19,5 +19,5 @@
 
 #pragma once
 
-//waveshape extrated from spice simulation
 float waveshape(float input);
+void set_shape(bool new_shape);

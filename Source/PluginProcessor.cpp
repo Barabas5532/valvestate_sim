@@ -19,6 +19,9 @@
 
 #include "PluginProcessor.h"
 #include "PluginEditor.h"
+#include "WaveShape.h"
+
+#define LISTENING_TEST 1
 
 ValvestateAudioProcessor::ValvestateAudioProcessor() : 
      AudioProcessor (BusesProperties()
@@ -39,7 +42,9 @@ ValvestateAudioProcessor::ValvestateAudioProcessor() :
         std::make_unique<AudioParameterFloat> ("treble", "Treble", 0, 1, 0.5),
         //contour gets unstable when set to 0
         std::make_unique<AudioParameterFloat> ("contour", "Contour", 0.01, 1, 0.5),
-        std::make_unique<AudioParameterFloat> ("volume", "Volume", 20, 50, 35)
+        std::make_unique<AudioParameterFloat> ("volume", "Volume", 20, 50, 35),
+        //Debug parameters for listening test, not part of normal UI
+        std::make_unique<AudioParameterBool> ("shape", "Shape", false),
         })
 {
     od = parameters.getRawParameterValue("od");
@@ -49,6 +54,7 @@ ValvestateAudioProcessor::ValvestateAudioProcessor() :
     treble = parameters.getRawParameterValue("treble");
     contourP = parameters.getRawParameterValue("contour");
     volume = parameters.getRawParameterValue("volume");
+    shape = parameters.getRawParameterValue("shape");
 }
 
 ValvestateAudioProcessor::~ValvestateAudioProcessor()
@@ -183,6 +189,7 @@ void ValvestateAudioProcessor::processBlock (AudioBuffer<float>& buffer, MidiBuf
     gaincontrol.setParameters(*gain, *od);
     fmv.setParameters(*bass, *middle, *treble);
     contour.setParameter(*contourP);
+    set_shape(*shape > 0.5);
 
     //process data
     input.process(context);
@@ -190,7 +197,6 @@ void ValvestateAudioProcessor::processBlock (AudioBuffer<float>& buffer, MidiBuf
     clipping.process(block);
     fmv.process(context);
     contour.process(context);
-
     block.multiplyBy(Decibels::decibelsToGain((float)*volume));
 
     // copy processed samples to the right channel
@@ -208,7 +214,11 @@ bool ValvestateAudioProcessor::hasEditor() const
 
 AudioProcessorEditor* ValvestateAudioProcessor::createEditor()
 {
+#if defined(LISTENING_TEST) && LISTENING_TEST
+    return new GenericAudioProcessorEditor (*this);
+#else
     return new ValvestateAudioProcessorEditor (*this);
+#endif
 }
 
 //==============================================================================
