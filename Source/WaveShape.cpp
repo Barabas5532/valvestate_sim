@@ -23,12 +23,7 @@
 
 #define ARRAY_LENGTH(a) (sizeof(a)/sizeof(a[0]))
 
-static const float SHAPE_SMALL[] = {
-    260.874, 259.7065092, 257.7457712, 252.9797121, 222.2539886, 
-141.4227325, 90.69125858, 87.11794571, 85.84172799,    85.06124, 
-};
-
-static const float SHAPE_LARGE[] = {
+static const float SHAPE[] = {
         260.874, 260.7859598, 260.6953072,  260.601432, 260.5041537,
     260.4031856, 260.2985207, 260.1896056,  260.076319, 259.9582966,
     259.8351546, 259.7065092, 259.5718914, 259.4308215, 259.2828199,
@@ -61,25 +56,42 @@ void set_shape(bool a_new_shape)
 float waveshape(float input)
 {
     float output;
-    const float *shape = new_shape ? SHAPE_LARGE : SHAPE_SMALL;
-    size_t shape_size = new_shape ? ARRAY_LENGTH(SHAPE_LARGE) : ARRAY_LENGTH(SHAPE_SMALL);
+    const float *shape = SHAPE;
+    size_t shape_size = ARRAY_LENGTH(SHAPE);
 
-    //if input is out of range, hard clip
-    //TODO: maybe it's better if we follow the gradient at the end of the shape
-    if(input <= -1)
+    float negative_slope = shape[1] - shape[0];
+    float positive_slope = shape[shape_size - 1] - shape[shape_size - 2];
+
+    //calculate which sample of shape the input sample corresponds to
+    //the first sample is -1, last is 1
+    float index = (input + 1.0f) / 2.0f * (shape_size - 1);
+
+    //if input is out of range, hard clip, or follow the slope if the new_shape
+    //is enabled
+    if(index <= 0)
     {
-        output = shape[0];
+        if(new_shape)
+        {
+            output = shape[0] + index * negative_slope;
+        }
+        else
+        {
+            output = shape[0];
+        }
     }
-    else if(input >= 1)
+    else if((int)index + 1 > (int)(shape_size - 1))
     {
-       output = shape[shape_size - 1];
+        if(new_shape)
+        {
+            output = shape[shape_size - 1] + (index - (shape_size - 1)) * positive_slope;
+        }
+        else
+        {
+            output = shape[shape_size - 1];
+        }
     }
     else
     {
-        //calculate which sample of shape the input sample corresponds to
-        //the first sample is -1, last is 1
-        float index = (input + 1.0f) / 2.0f * (shape_size - 1);
-
         // linear interpolation between two nearest elements in shape.
         // conversion to int rounds down
         float ratio = index - ((int)index);
