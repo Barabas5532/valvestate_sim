@@ -20,4 +20,3 @@
 #pragma once
 
 float waveshape(float input);
-void set_shape(bool new_shape);

@@ -75,7 +75,6 @@ private:
     std::atomic<float> *treble = nullptr;
     std::atomic<float> *contourP = nullptr;
     std::atomic<float> *volume = nullptr;
-    std::atomic<float> *shape = nullptr;
 
     InputFilter input;
     GainControl gaincontrol;
