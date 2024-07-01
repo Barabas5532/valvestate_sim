@@ -1,0 +1,5 @@
+#N canvas 827 239 527 327 12;
+#X obj 199 539 scope~ 401 141 2 3 128 -2 2 0 0 1 0 77 77 77 228 228 228 183 183 183 0 empty;
+#X obj 199 79 osc~ 882, f 11;
+#X obj 299 159 fmv_tonestack;
+#X connect 1 0 0 0;
