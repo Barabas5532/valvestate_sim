@@ -9,9 +9,13 @@
 #X obj 436 179 nbx 4 18 -1e+37 1e+37 0 0 empty empty empty 0 -8 0 10 #e4e4e4 #373737 #373737 0 256;
 #X obj 493 119 knob 50 0 1 0 0.5 empty empty #E4E4E4 #B7B7B7 #4D4D4D 1 0 0 0 1 270 0 0 0;
 #X obj 493 179 nbx 4 18 -1e+37 1e+37 0 0 empty empty empty 0 -8 0 10 #e4e4e4 #373737 #373737 0 256;
-#X obj 299 359 out~;
-#X obj 299 219 pink~;
-#X connect 0 0 10 0;
+#X obj 359 359 out~;
+#X obj 279 99 pink~;
+#X obj 359 319 clipping;
+#X obj 79 59 phasor~ 1000;
+#X obj 79 99 triangle~ @lo -1 @hi 1 0.5;
+#X obj 279 259 *~;
+#X obj 222 159 hsl 128 17 0.1 10 1 0 empty empty empty -2 -8 0 10 #e4e4e4 #4d4d4d #373737 0 1;
 #X connect 1 0 4 0;
 #X connect 2 0 0 1;
 #X connect 2 1 0 2;
@@ -25,4 +29,8 @@
 #X connect 7 0 2 0;
 #X connect 8 0 9 0;
 #X connect 9 0 3 0;
-#X connect 11 0 0 0;
+#X connect 12 0 10 0;
+#X connect 13 0 14 0;
+#X connect 14 0 15 0;
+#X connect 15 0 12 0;
+#X connect 16 0 15 1;
