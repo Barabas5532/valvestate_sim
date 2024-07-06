@@ -1,4 +1,4 @@
-cmake_minimum_required(VERSION 3.30)
+cmake_minimum_required(VERSION 3.26)
 
 project(puredata_externals)
 
@@ -18,9 +18,8 @@ add_library(iir STATIC)
 target_sources(iir PRIVATE ./IIR-Filter/iir/src/iir.c)
 target_include_directories(iir PUBLIC ./IIR-Filter/iir/src)
 
-# add_pd_external(iir3 iir3~ "")
-# target_sources(iir3 PRIVATE iir3.c)
-# target_link_libraries(iir3 PRIVATE iir)
+add_pd_external(iir3 iir3~ "")
+target_sources(iir3 PRIVATE iir3.c)
+target_link_libraries(iir3 PRIVATE iir)
 
 # add_pd_external(iir4_project iir4~)
-add_pd_external(helloworld helloworld iir3.c)

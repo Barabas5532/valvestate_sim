@@ -9,7 +9,7 @@
 #X obj 176 479 nbx 4 18 0 1 0 0 empty empty empty 0 -8 0 10 #e4e4e4 #373737 #373737 0 256;
 #X obj 239 419 knob 50 0 1 0 0.5 empty empty #E4E4E4 #B7B7B7 #4D4D4D 1 0 0 0 1 270 0 0 0;
 #X obj 239 479 nbx 4 18 0 1 0 0 empty empty empty 0 -8 0 10 #e4e4e4 #373737 #373737 0 256;
-#X obj -141 679 out~;
+#X obj -61 779 out~;
 #X obj 319 519 clipping;
 #X obj 39 319 valvestate_gain_control;
 #X obj 159 219 nbx 4 18 -1e+37 1e+37 0 0 empty empty empty 0 -8 0 10 #e4e4e4 #373737 #373737 0 256;
@@ -24,9 +24,14 @@
 #X obj 139 639 knob 50 0 1 0 0.5 empty empty #E4E4E4 #B7B7B7 #4D4D4D 1 0 0 0 1 270 0 0 0;
 #X obj 139 699 nbx 4 18 -1e+37 1e+37 0 0 empty empty empty 0 -8 0 10 #e4e4e4 #373737 #373737 0 256;
 #X obj 19 499 adc~, f 6;
-#X obj -101 639 nop~;
+#X obj -21 739 nop~;
 #X obj -61 139 /~ 100;
 #X obj -41 359 /~ 4000;
+#X obj -81 619 vu 20 120 empty empty -1 -8 0 10 #e4e4e4 #373737 1 0;
+#X obj -81 559 peak~;
+#X obj 259 179 samplerate~;
+#X floatatom 259 219 11 0 0 0 - - - 16;
+#X obj 259 139 bng 21 250 50 0 empty empty empty 17 7 0 10 #e4e4e4 #4d4d4d #373737;
 #X connect 0 0 20 0;
 #X connect 0 0 25 0;
 #X connect 1 0 4 0;
@@ -57,5 +62,9 @@
 #X connect 22 0 23 0;
 #X connect 23 0 20 1;
 #X connect 24 0 0 0;
+#X connect 24 0 29 0;
 #X connect 25 0 10 0;
 #X connect 25 0 10 1;
+#X connect 29 0 28 0;
+#X connect 30 0 31 0;
+#X connect 32 0 30 0;
