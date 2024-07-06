@@ -1,0 +1,9 @@
+[submodule "thirdparty/pd.build"]
+	path = thirdparty/pd.build
+	url = https://github.com/pierreguillot/pd.build
+[submodule "thirdparty/pure-data"]
+	path = thirdparty/pure-data
+	url = https://github.com/pure-data/pure-data.git
+[submodule "pd/externals/IIR-Filter"]
+	path = pd/externals/IIR-Filter
+	url = git@github.com:Barabas5532/IIR-Filter.git
