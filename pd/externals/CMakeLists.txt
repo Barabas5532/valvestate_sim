@@ -22,4 +22,6 @@ add_pd_external(iir3 iir3~ "")
 target_sources(iir3 PRIVATE iir3.c)
 target_link_libraries(iir3 PRIVATE iir)
 
-# add_pd_external(iir4_project iir4~)
+add_pd_external(iir4 iir4~ "")
+target_sources(iir4 PRIVATE iir4.c)
+target_link_libraries(iir4 PRIVATE iir)
