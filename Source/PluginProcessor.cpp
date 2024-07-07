@@ -19,7 +19,6 @@
 
 #include "PluginProcessor.h"
 #include "PluginEditor.h"
-#include "WaveShape.h"
 
 ValvestateAudioProcessor::ValvestateAudioProcessor() : 
      AudioProcessor (BusesProperties()
@@ -40,7 +39,7 @@ ValvestateAudioProcessor::ValvestateAudioProcessor() :
         std::make_unique<AudioParameterFloat> ("treble", "Treble", 0, 1, 0.5),
         //contour gets unstable when set to 0
         std::make_unique<AudioParameterFloat> ("contour", "Contour", 0.01, 1, 0.5),
-        std::make_unique<AudioParameterFloat> ("volume", "Volume", 20, 50, 35),
+        std::make_unique<AudioParameterFloat> ("volume", "Volume", 20, 50, 35)
         })
 {
     od = parameters.getRawParameterValue("od");
@@ -191,6 +190,7 @@ void ValvestateAudioProcessor::processBlock (AudioBuffer<float>& buffer, MidiBuf
     clipping.process(block);
     fmv.process(context);
     contour.process(context);
+
     block.multiplyBy(Decibels::decibelsToGain((float)*volume));
 
     // copy processed samples to the right channel

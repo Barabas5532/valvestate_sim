@@ -19,8 +19,7 @@
 
 #include "Clipping.h"
 #include "WaveShape.h"
-#define OVERSAMPLING_ORDER (3)
-#define FILTER_TYPE (dsp::Oversampling<float>::filterHalfBandFIREquiripple)
+#define OVERSAMPLING_ORDER 3
 
 /* TODO using IIR filter here causes the audio to mute after some random amount
  * of time, generally a few seconds. Investigate why that's happening.
@@ -29,7 +28,8 @@
  *  processsing is bypassed, so probably not related to numerical stability of
  *  IIR filter
  */
-Clipping::Clipping() : oversampling(1, 0, FILTER_TYPE)
+Clipping::Clipping() : oversampling(1, OVERSAMPLING_ORDER,
+        dsp::Oversampling<float>::filterHalfBandFIREquiripple)
 {
     waveshaper.functionToUse = waveshape;
 }
@@ -48,41 +48,6 @@ void Clipping::process(dsp::AudioBlock<float> block)
 
 void Clipping::prepare(dsp::ProcessSpec spec)
 {
-    // Add stages to oversampling based on the samplerate. We want 8x
-    // oversampling when the input rate is 44.1kHz or 48kHz.
-    oversampling.clearOversamplingStages();
-
-    auto samplerate_ratio = spec.sampleRate / 44.1e3;
-    juce::Logger::outputDebugString("samplerate_ratio: " + std::to_string(samplerate_ratio));
-    if(samplerate_ratio < pow(2, OVERSAMPLING_ORDER))
-    {
-        int log_ratio = log2(samplerate_ratio);
-        for(int n = 0; n < (OVERSAMPLING_ORDER - log_ratio); n++)
-        {
-            juce::Logger::outputDebugString("Added oversampling stage");
-            /* Copied from the Oversampling constructor. For some reason there
-             * is no function to add a stage using the parameters passed to the
-             * constructor */
-            bool isMaximumQuality = true;
-            auto twUp   = (isMaximumQuality ? 0.10f : 0.12f) * (n == 0 ? 0.5f : 1.0f);
-            auto twDown = (isMaximumQuality ? 0.12f : 0.15f) * (n == 0 ? 0.5f : 1.0f);
-
-            auto gaindBStartUp    = (isMaximumQuality ? -90.0f : -70.0f);
-            auto gaindBStartDown  = (isMaximumQuality ? -75.0f : -60.0f);
-            auto gaindBFactorUp   = (isMaximumQuality ? 10.0f  : 8.0f);
-            auto gaindBFactorDown = (isMaximumQuality ? 10.0f  : 8.0f);
-
-            oversampling.addOversamplingStage (FILTER_TYPE,
-                    twUp, gaindBStartUp + gaindBFactorUp * (float) n,
-                    twDown, gaindBStartDown + gaindBFactorDown * (float) n);
-        }
-    }
-    else
-    {
-        juce::Logger::outputDebugString("No oversampling necessary");
-        oversampling.addDummyOversamplingStage();
-    }
-
     oversampling.initProcessing(spec.maximumBlockSize);
 
     juce::Logger::outputDebugString("Oversampling latency (samples): " + std::to_string(oversampling.getLatencyInSamples()));
