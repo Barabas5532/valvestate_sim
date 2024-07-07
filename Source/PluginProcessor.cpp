@@ -19,7 +19,7 @@
 
 #include "PluginProcessor.h"
 #include "PluginEditor.h"
-#include "WaveShape.h"
+#include "TableInterpolate.h"
 
 ValvestateAudioProcessor::ValvestateAudioProcessor() : 
      AudioProcessor (BusesProperties()

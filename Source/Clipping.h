@@ -18,7 +18,9 @@
 */
 
 #pragma once
+
 #include "../JuceLibraryCode/JuceHeader.h"
+#include "TableInterpolate.h"
 
 class Clipping
 {
