@@ -22,6 +22,7 @@
 # %%
 import numpy as np
 import scipy.signal as signal
+from scipy.interpolate import PchipInterpolator, CubicSpline, Akima1DInterpolator
 import matplotlib.pyplot as plt
 import csv
 import sympy
@@ -34,7 +35,7 @@ rate = 48000
 k = 2*rate
 
 # Default plot settings
-plt.rcParams["figure.figsize"] = (14, 7)
+plt.rcParams["figure.figsize"] = (10, 5)
 plt.rcParams['axes.grid'] = True
 
 from sympy.abc import s, z, K
@@ -87,7 +88,7 @@ def substitute_parameter(A, parameters):
     return [float(sympy.sympify(AA).subs(parameters)) for AA in A]
 
 
-# %% [markdown]
+# %% [markdown] jp-MarkdownHeadingCollapsed=true
 # ## Input filter
 #
 # This is the first stage of the amplifier, it's suspiciously similar to a tubescreamer pedal.
@@ -127,7 +128,7 @@ plt.ylim(0, 30)
 plt.legend()
 plt.show()
 
-# %% [markdown]
+# %% [markdown] jp-MarkdownHeadingCollapsed=true
 # ## Gain control
 #
 # There are two sets of functions, as this circuit has two switchable modes (OD1/OD2).
@@ -187,6 +188,10 @@ plt.show()
 
 # %% [markdown]
 # ## Contour filter
+#
+# Sound demos: 
+# * https://youtu.be/d70jrnlN62k?t=395
+# * https://youtu.be/5Ju7Zzl4D1g?t=191
 
 # %%
 # contour.info
@@ -209,8 +214,14 @@ d_poly = sympy.Poly(d, s)
 B = n_poly.all_coeffs()
 A = d_poly.all_coeffs()
 
-P = [0, 0.01, 0.02, 0.05, 0.5, 0.7, 0.8, 0.9, 0.96, 1]
-# plot response of analogue filter
+tf = (B[0]*s**3 + B[1]*s**2 + B[2]*s + B[3])/(A[0]*s**4 + A[1]*s**3 + A[2]*s**2 + A[3]*s + A[4])
+Bz, Az = bilinear_transform(tf)
+
+print_as_cpp_coefficients(Bz, "B")
+print_as_cpp_coefficients(Az, "A")
+
+# %%
+P = [0, 0.0035, 0.006, 0.01, 0.03, 0.3]
 for pp in P:
     b = substitute_parameter(B, {p: pp})
     a = substitute_parameter(A, {p: pp})
@@ -219,22 +230,14 @@ for pp in P:
     w, H = signal.freqresp(tf)
     plt.semilogx(w/2/np.pi, 20*np.log10(np.abs(H)), label=f"analogue {pp: .2f}")
 
-tf = (B[0]*s**3 + B[1]*s**2 + B[2]*s + B[3])/(A[0]*s**4 + A[1]*s**3 + A[2]*s**2 + A[3]*s + A[4])
-Bz, Az = bilinear_transform(tf)
+b = substitute_parameter(Bz, {p: P[0], K: k})
+a = substitute_parameter(Az, {p: P[0], K: k})
 
-print_as_cpp_coefficients(Bz, "B")
-print_as_cpp_coefficients(Az, "A")
+tf = signal.dlti(b, a)
+w, H = signal.dfreqresp(tf)
+plt.semilogx(w/2/np.pi*rate, 20*np.log10(np.abs(H)), label=f"digital {P[0]: 0.2f}", linestyle='--')
 
-# plot response of digital filter
-for pp in P:
-    b = substitute_parameter(Bz, {p: pp, K: k})
-    a = substitute_parameter(Az, {p: pp, K: k})
-
-    tf = signal.dlti(b, a)
-    w, H = signal.dfreqresp(tf)
-    plt.semilogx(w/2/np.pi*rate, 20*np.log10(np.abs(H)), label=f"digital {pp: 0.2f}", linestyle='--')
-
-plt.title("Frequency response of contour filter")
+plt.title("Frequency response of contour filter (dark mode)")
 plt.xlabel("Frequency (Hz)")
 plt.ylabel("Magnitude (dB)")
 plt.xlim(20, 20e3)
@@ -242,18 +245,54 @@ plt.ylim(-30, -5)
 plt.legend()
 plt.show()
 
+# %%
+P = [0.3, 0.75, 0.88, 0.94, 0.977, 1]
+for pp in P:
+    b = substitute_parameter(B, {p: pp})
+    a = substitute_parameter(A, {p: pp})
+
+    tf = signal.lti(b, a)
+    w, H = signal.freqresp(tf)
+    plt.semilogx(w/2/np.pi, 20*np.log10(np.abs(H)), label=f"analogue {pp: .2f}")
+
+b = substitute_parameter(Bz, {p: pp, K: k})
+a = substitute_parameter(Az, {p: pp, K: k})
+
+tf = signal.dlti(b, a)
+w, H = signal.dfreqresp(tf)
+plt.semilogx(w/2/np.pi*rate, 20*np.log10(np.abs(H)), label=f"digital {pp: 0.2f}", linestyle='--')
+
+plt.title("Frequency response of contour filter (scoop mode)")
+plt.xlabel("Frequency (Hz)")
+plt.ylabel("Magnitude (dB)")
+plt.xlim(20, 20e3)
+plt.ylim(-30, -5)
+plt.legend()
+plt.show()
 
 # %% [markdown]
 # Notice how the response is non-linear here. Between 0 - 0.05, there is substantial high-cut. From 0.05 to 0.5 the response barely changes, then above 0.5 there is a mid-cut. It might be a nice improvement to add a function that transforms the parameter in order to linearise the effect.
 #
 # Further improvement is to run the filters at an oversampled rate, or use another method to reduce the effect of frequency warping. This can be seen on the graph as a difference between the analog and digital response at high frequencies.
 
-# %% [markdown]
-# # Distortion
-#
-# The distortion comes from a combination of diode clipping and a 12AX7 vacuum tube. A static waveshaper is used to simulate these circuits. This was created by entering the schematic into LTSpice, then running a DC operating point sweep.
-#
-# To output the data from LTSpice, click on the node that should be exported (V(follower) in this case). This should make a plot appear. Now we can right click on the plot then navigate to File -> Export data as text.
+# %%
+y = [0, 0.0035, 0.006, 0.01, 0.03, 0.3, 0.75, 0.88, 0.94, 0.977, 1]
+x = np.linspace(0, 1, num=len(y))
+
+interp = {}
+interp["akima1d"] = Akima1DInterpolator(x, y)
+interp["pchip"] = PchipInterpolator(x, y)
+
+plt.scatter(x, y)
+
+for i in interp:
+    x_interp = np.linspace(0, 1, num=1000)
+    plt.plot(x_interp, [interp[i](x) for x in x_interp], label=f'{i}')
+plt.legend()
+plt.show()
+
+best_interp = interp["pchip"]
+
 
 # %%
 # 9 decimal digits should be enough to exactly represent a 32-bit IEEE 754 float
@@ -268,7 +307,57 @@ def print_cpp_array(a):
     print("\n}", end="")
 
         
-print_cpp_array([1.000000001, 2., 3., 4., 5., 6.])
+print_cpp_array([0.000012345678901234567890, 1.000000001, 2., 3., 4., 5., 6.])
+
+# %%
+# evaluate interpolator by plotting frequency response against parameter changes
+
+Pleft = np.linspace(0, 0.5, num=21)
+Pright = np.linspace(0.5, 1, num=21)
+
+def plot_parameter_sweep(P):
+    for pp in P:
+        b = substitute_parameter(B, {p: pp})
+        a = substitute_parameter(A, {p: pp})
+    
+        tf = signal.lti(b, a)
+        w, H = signal.freqresp(tf)
+        plt.semilogx(w/2/np.pi, 20*np.log10(np.abs(H)), label=f"analogue {pp: .2f}")
+
+    plt.xlabel("Frequency (Hz)")
+    plt.ylabel("Magnitude (dB)")
+    plt.xlim(20, 20e3)
+    plt.ylim(-30, -5)
+    plt.show()
+
+plt.subplot(2, 2, 1)
+plt.title('no interp')
+plot_parameter_sweep(Pleft)
+
+plt.subplot(2, 2, 2)
+plt.title('no interp')
+plot_parameter_sweep(Pright)
+
+plt.subplot(2, 2, 3)
+plt.title('interp')
+plot_parameter_sweep([best_interp(pp) for pp in Pleft])
+
+plt.subplot(2, 2, 4)
+plt.title('interp')
+plot_parameter_sweep([best_interp(pp) for pp in Pright])
+
+plt.show()
+
+# %%
+P = np.linspace(0, 1, num=100)
+print_cpp_array([best_interp(pp) for pp in P])
+
+# %% [markdown]
+# # Distortion
+#
+# The distortion comes from a combination of diode clipping and a 12AX7 vacuum tube. A static waveshaper is used to simulate these circuits. This was created by entering the schematic into LTSpice, then running a DC operating point sweep.
+#
+# To output the data from LTSpice, click on the node that should be exported (V(follower) in this case). This should make a plot appear. Now we can right click on the plot then navigate to File -> Export data as text.
 
 # %%
 input_voltage = []
