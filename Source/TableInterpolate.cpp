@@ -21,7 +21,6 @@
 
 float linear_interpolate_table(std::span<const float> table, float input) {
   float output;
-  const float *data = table.data();
   size_t size = table.size();
 
   //calculate which entry of table the input corresponds to
@@ -31,19 +30,18 @@ float linear_interpolate_table(std::span<const float> table, float input) {
   //if input is out of range, hard clip
   if(index <= 0)
   {
-    output = data[0];
+    output = table[0];
   }
   else if((int)index + 1 > (int)(size - 1))
   {
-    output = data[size - 1];
+    output = table[size - 1];
   }
   else
   {
     // linear interpolation between two nearest elements in table.
     // conversion to int rounds down
     float ratio = index - ((int)index);
-    output =
-        data[(int)index] + ratio*(data[((int)index) + 1] - data[(int)index]);
+    output = table[(int)index] + ratio*(table[((int)index) + 1] - table[(int)index]);
   }
 
   return output;

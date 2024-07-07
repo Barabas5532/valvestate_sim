@@ -26,4 +26,4 @@
  * Input must be in the range [-1, 1]. Input outside this range will be hard
  * clipped.
  */
-float linear_interpolate_table(std::span<const float> table, float sample);
+float linear_interpolate_table(std::span<const float> table_in, float sample);
