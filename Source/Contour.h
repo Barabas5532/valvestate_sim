@@ -33,8 +33,6 @@ class ContourFilter
     void setParameter(float p);
 
     private:
-    dsp::IIR::Coefficients<float> design(float p);
-
     dsp::IIR::Filter<float> filter;
     float sampleRate;
 
