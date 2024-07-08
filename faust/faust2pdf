@@ -1,0 +1,19 @@
+#! /bin/bash -e
+
+faust2svg $@
+
+for d in $@; do
+    ext=${d##*.}
+    if [ $ext = "dsp" ]; then
+        name=${d%.dsp}
+        cd $name-svg
+        for f in *.svg; do
+            inkscape -o ${f%.svg}.eps $f
+            epstopdf ${f%.svg}.eps
+            rm $f
+        done
+        cd ..
+        mv $name-svg $name-pdf
+    fi
+done
+
