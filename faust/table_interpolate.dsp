@@ -12,14 +12,13 @@ import("stdfaust.lib");
  * the last entry, and other values are linear interpolations of the two nearast
  * values from the table.
 */
-
 linearInterpolateTable(tableSize, tableData, sample) = out
    with {
         clippedSample = max(0.0, min(1.0, sample));
         pos = clippedSample * (tableSize - 1);
 
         idx1 = int(pos);
-        idx2 = min(table_size - 1, idx1 + 1);
+        idx2 = min(tableSize - 1, idx1 + 1);
         frac = pos - float(idx1);
 
         value1 = rdtable(tableSize, tableData, idx1);
@@ -27,5 +26,3 @@ linearInterpolateTable(tableSize, tableData, sample) = out
 
         out = value1 + frac * (value2 - value1);
     } : _;
-
-//rdtable(table_size, table_data)
