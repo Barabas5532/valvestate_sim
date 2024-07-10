@@ -22,8 +22,8 @@ linearInterpolateTable(tableSize, tableData, sample) = out
         idx2 = min(table_size - 1, idx1 + 1);
         frac = pos - float(idx1);
 
-        value1 = rdtable(tableSize, tableData, 0);
-        value2 = rdtable(tableSize, tableData, 0);
+        value1 = rdtable(tableSize, tableData, idx1);
+        value2 = rdtable(tableSize, tableData, idx2);
 
         out = value1 + frac * (value2 - value1);
     } : _;
