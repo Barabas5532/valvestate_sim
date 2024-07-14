@@ -23,4 +23,5 @@ shape = waveform{
         85.31182,    85.24625,     85.1827,    85.12107,    85.06123
 };
 
-clipping = shape,_ : linearInterpolateTable : _;
+// TODO how to get the middle sample (180.4541) at compile time?
+clipping = shape,_ : _,_,+(1) : _,_,/(2) : linearInterpolateTable : +(-180.4541) : /(300.0) : _ ;

@@ -1,7 +1,7 @@
 import("stdfaust.lib");
 import("iir3.dsp");
 
-fmv(l, m, t) = _ : iir3(B0, B1, B2, B3, A0, A1, A2, A3)
+fmv(l, m, t) = _ : iir3(B0 / A0, B1 / A0, B2 / A0, B3 / A0, A1 / A0, A2 / A0, A3 / A0)
 with {
     R1 = 220e3;
     R2 = 1e6;
