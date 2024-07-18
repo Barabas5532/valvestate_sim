@@ -15,18 +15,19 @@ juce_generate_juce_header(Valvestate)
 
 target_sources(Valvestate
     PRIVATE
-        Source/Clipping.cpp
-        Source/Contour.cpp
-        Source/FMV.cpp
-        Source/GainControl.cpp
-        Source/InputFilter.cpp
+        dsp/Clipping.cpp
+        dsp/Contour.cpp
+        dsp/FMV.cpp
+        dsp/GainControl.cpp
+        dsp/InputFilter.cpp
+        dsp/WaveShape.cpp
         Source/PluginEditor.cpp
-        Source/PluginProcessor.cpp
-        Source/WaveShape.cpp)
+        Source/PluginProcessor.cpp)
 
 
 target_include_directories(Valvestate
     PRIVATE
+        dsp
         Source)
 
 target_compile_definitions(Valvestate
