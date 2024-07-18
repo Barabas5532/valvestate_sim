@@ -1,6 +1,5 @@
 cmake_minimum_required(VERSION 3.15)
 project(Valvestate VERSION 0.0.1)
-set(CMAKE_EXPORT_COMPILE_COMMANDS ON)
 
 add_subdirectory(../thirdparty/JUCE JUCE)
 
@@ -20,6 +19,7 @@ target_sources(Valvestate
         dsp/FMV.cpp
         dsp/GainControl.cpp
         dsp/InputFilter.cpp
+        dsp/Valvestate.cpp
         dsp/WaveShape.cpp
         Source/PluginEditor.cpp
         Source/PluginProcessor.cpp)

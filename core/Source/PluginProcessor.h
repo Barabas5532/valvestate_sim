@@ -20,11 +20,7 @@
 #pragma once
 
 #include "../JuceLibraryCode/JuceHeader.h"
-#include "InputFilter.h"
-#include "GainControl.h"
-#include "Clipping.h"
-#include "FMV.h"
-#include "Contour.h"
+#include "Valvestate.h"
 
 class ValvestateAudioProcessor  : public AudioProcessor
 {
@@ -73,14 +69,10 @@ private:
     std::atomic<float> *bass = nullptr;
     std::atomic<float> *middle = nullptr;
     std::atomic<float> *treble = nullptr;
-    std::atomic<float> *contourP = nullptr;
+    std::atomic<float> *contour = nullptr;
     std::atomic<float> *volume = nullptr;
-
-    InputFilter input;
-    GainControl gaincontrol;
-    Clipping clipping;
-    FMVFilter fmv;
-    ContourFilter contour;
+    
+    std::unique_ptr<ValvestateProcessor> dsp;
 
     JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR (ValvestateAudioProcessor)
 };

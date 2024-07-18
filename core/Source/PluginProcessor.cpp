@@ -19,7 +19,6 @@
 
 #include "PluginProcessor.h"
 #include "PluginEditor.h"
-#include "WaveShape.h"
 
 ValvestateAudioProcessor::ValvestateAudioProcessor() : 
      AudioProcessor (BusesProperties()
@@ -41,14 +40,15 @@ ValvestateAudioProcessor::ValvestateAudioProcessor() :
         //contour gets unstable when set to 0
         std::make_unique<AudioParameterFloat> ("contour", "Contour", 0.01, 1, 0.5),
         std::make_unique<AudioParameterFloat> ("volume", "Volume", 20, 50, 35),
-        })
+        }),
+    dsp{std::make_unique<ValvestateProcessor>()}
 {
     od = parameters.getRawParameterValue("od");
     gain = parameters.getRawParameterValue("gain");
     bass = parameters.getRawParameterValue("bass");
     middle = parameters.getRawParameterValue("middle");
     treble = parameters.getRawParameterValue("treble");
-    contourP = parameters.getRawParameterValue("contour");
+    contour = parameters.getRawParameterValue("contour");
     volume = parameters.getRawParameterValue("volume");
 }
 
@@ -131,20 +131,12 @@ void ValvestateAudioProcessor::prepareToPlay (double sampleRate, int samplesPerB
     spec.maximumBlockSize = (juce::uint32)samplesPerBlock;
     spec.numChannels = 1;
 
-    input.prepare(spec);
-    gaincontrol.prepare(spec);
-    clipping.prepare(spec);
-    fmv.prepare(spec);
-    contour.prepare(spec);
+    dsp->prepare(spec);
 }
 
 void ValvestateAudioProcessor::releaseResources()
 {
-    input.reset();
-    gaincontrol.reset();
-    clipping.reset();
-    fmv.reset();
-    contour.reset();
+    dsp->reset();
 }
 
 bool ValvestateAudioProcessor::isBusesLayoutSupported (const BusesLayout& layouts) const
@@ -180,18 +172,10 @@ void ValvestateAudioProcessor::processBlock (AudioBuffer<float>& buffer, MidiBuf
     dsp::AudioBlock<float> block(&input_samples, 1, (size_t)buffer.getNumSamples());
     dsp::ProcessContextReplacing<float> context(block);
 
-    //set parameters
-    gaincontrol.setParameters(*gain, *od);
-    fmv.setParameters(*bass, *middle, *treble);
-    contour.setParameter(*contourP);
+    dsp->setParameters(*gain, *od > 0.5, *bass, *middle, *treble, *contour,
+                       *volume);
 
-    //process data
-    input.process(context);
-    gaincontrol.process(context);
-    clipping.process(block);
-    fmv.process(context);
-    contour.process(context);
-    block.multiplyBy(Decibels::decibelsToGain((float)*volume));
+    dsp->process(context);
 
     // copy processed samples to the right channel
     for(int i = 0; i < buffer.getNumSamples(); i++)
