@@ -20,12 +20,12 @@
 #pragma once
 
 #include "../JuceLibraryCode/JuceHeader.h"
-#include "Valvestate.h"
+#include "ValvestateProcessorBase.h"
 
 class ValvestateAudioProcessor  : public AudioProcessor
 {
 public:
-    ValvestateAudioProcessor();
+    explicit ValvestateAudioProcessor(std::unique_ptr<ValvestateProcessorBase> dsp);
     ~ValvestateAudioProcessor();
 
     void prepareToPlay (double sampleRate, int samplesPerBlock) override;
@@ -72,7 +72,7 @@ private:
     std::atomic<float> *contour = nullptr;
     std::atomic<float> *volume = nullptr;
     
-    std::unique_ptr<ValvestateProcessor> dsp;
+    std::unique_ptr<ValvestateProcessorBase> dsp;
 
     JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR (ValvestateAudioProcessor)
 };

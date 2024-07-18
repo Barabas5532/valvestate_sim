@@ -20,7 +20,7 @@
 #include "PluginProcessor.h"
 #include "PluginEditor.h"
 
-ValvestateAudioProcessor::ValvestateAudioProcessor() : 
+ValvestateAudioProcessor::ValvestateAudioProcessor(std::unique_ptr<ValvestateProcessorBase> a_dsp) : 
      AudioProcessor (BusesProperties()
                      #if ! JucePlugin_IsMidiEffect
                       #if ! JucePlugin_IsSynth
@@ -41,7 +41,7 @@ ValvestateAudioProcessor::ValvestateAudioProcessor() :
         std::make_unique<AudioParameterFloat> ("contour", "Contour", 0.01, 1, 0.5),
         std::make_unique<AudioParameterFloat> ("volume", "Volume", 20, 50, 35),
         }),
-    dsp{std::make_unique<ValvestateProcessor>()}
+    dsp{std::move(a_dsp)}
 {
     od = parameters.getRawParameterValue("od");
     gain = parameters.getRawParameterValue("gain");
@@ -210,11 +210,4 @@ void ValvestateAudioProcessor::setStateInformation (const void* data, int sizeIn
     if (xmlState.get() != nullptr)
         if (xmlState->hasTagName (parameters.state.getType()))
             parameters.replaceState (ValueTree::fromXml (*xmlState));
-}
-
-//==============================================================================
-// This creates new instances of the plugin..
-AudioProcessor* JUCE_CALLTYPE createPluginFilter()
-{
-    return new ValvestateAudioProcessor();
 }

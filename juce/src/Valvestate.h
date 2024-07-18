@@ -1,17 +1,13 @@
-#include "../JuceLibraryCode/JuceHeader.h"
+#pragma once
 
+#include "../JuceLibraryCode/JuceHeader.h"
 #include "Clipping.h"
 #include "Contour.h"
 #include "FMV.h"
 #include "GainControl.h"
 #include "InputFilter.h"
+#include "ValvestateProcessorBase.h"
 #include "WaveShape.h"
-
-class ValvestateProcessorBase : public juce::dsp::ProcessorBase {
-public:
-  virtual void setParameters(float gain, bool od, float bass, float middle,
-                             float treble, float contour, float volume) = 0;
-};
 
 class ValvestateProcessor final : public ValvestateProcessorBase {
 public:
