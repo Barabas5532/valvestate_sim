@@ -2,7 +2,7 @@ cmake_minimum_required(VERSION 3.15)
 project(Valvestate VERSION 0.0.1)
 set(CMAKE_EXPORT_COMPILE_COMMANDS ON)
 
-add_subdirectory(JUCE)
+add_subdirectory(../thirdparty/JUCE JUCE)
 
 juce_add_plugin(Valvestate
     COMPANY_NAME "Barabas Raffai"
