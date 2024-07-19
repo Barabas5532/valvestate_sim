@@ -4,7 +4,7 @@ project(puredata_externals)
 
 include(../../../../thirdparty/pd.build/pd.cmake)
 
-set_pd_sources(../../thirdparty/pure-data/src)
+set_pd_sources(../../../../thirdparty/libpd/pure-data)
 set_pd_external_path(${PROJECT_SOURCE_DIR}/binaries/)
 set(PD_FLOATSIZE64 OFF)
 
