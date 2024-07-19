@@ -1,11 +1,11 @@
-juce_add_plugin(Valvestate
+juce_add_plugin(valvestate_plugin_juce
     COMPANY_NAME "Barabas Raffai"
     PLUGIN_MANUFACTURER_CODE BaRa
     PLUGIN_CODE Valv
     FORMATS VST3 Standalone
-    PRODUCT_NAME "HYBRID 8100")
+    PRODUCT_NAME "Valvestate JUCE")
 
-target_sources(Valvestate
+target_sources(valvestate_plugin_juce
     PRIVATE
         src/Clipping.cpp
         src/Contour.cpp
@@ -16,12 +16,7 @@ target_sources(Valvestate
         src/Valvestate.cpp
         src/WaveShape.cpp)
 
-target_include_directories(Valvestate
-    PRIVATE
-        dsp
-        ../core/Source)
-
-target_link_libraries(Valvestate
+target_link_libraries(valvestate_plugin_juce
     PRIVATE
         valvestate::core
         valvestate::juce)

@@ -2,13 +2,7 @@ cmake_minimum_required(VERSION 3.26)
 
 project(puredata_externals)
 
-set(CMAKE_C_STANDARD 11)
-set(CMAKE_C_STANDARD_REQUIRED ON)
-
-set(CMAKE_CXX_STANDARD 20)
-set(CMAKE_CXX_STANDARD_REQUIRED ON)
-
-include(../../thirdparty/pd.build/pd.cmake)
+include(../../../../thirdparty/pd.build/pd.cmake)
 
 set_pd_sources(../../thirdparty/pure-data/src)
 set_pd_external_path(${PROJECT_SOURCE_DIR}/binaries/)
