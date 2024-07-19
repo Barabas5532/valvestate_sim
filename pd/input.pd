@@ -1,0 +1,3 @@
+#N canvas 827 239 527 327 12;
+#X obj 238 91 palette/adsr.m~;
+#A saved 10 20 0.5 50 0;
