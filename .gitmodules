@@ -8,5 +8,5 @@
 	path = thirdparty/pure-data
 	url = https://github.com/pure-data/pure-data.git
 [submodule "pd/externals/IIR-Filter"]
-	path = pd/externals/IIR-Filter
+	path = pd/pd/externals/IIR-Filter
 	url = https://github.com/Barabas5532/IIR-Filter.git
