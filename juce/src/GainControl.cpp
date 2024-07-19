@@ -55,16 +55,16 @@ void GainControl::setParameters(float g, float channel)
     }
 
     filter.coefficients = 
-            new dsp::IIR::Coefficients<float> (B0, B1, B2, A0, A1, A2);
+            new juce::dsp::IIR::Coefficients<float> (B0, B1, B2, A0, A1, A2);
 }
 
-void GainControl::prepare(dsp::ProcessSpec spec)
+void GainControl::prepare(juce::dsp::ProcessSpec spec)
 {
     filter.prepare(spec);
     sampleRate = spec.sampleRate;
 }
 
-void GainControl::process(dsp::ProcessContextReplacing<float> context)
+void GainControl::process(juce::dsp::ProcessContextReplacing<float> context)
 {
     filter.process(context);
 }

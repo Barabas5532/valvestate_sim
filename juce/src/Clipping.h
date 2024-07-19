@@ -18,7 +18,7 @@
 */
 
 #pragma once
-#include "../JuceLibraryCode/JuceHeader.h"
+#include "juce_dsp/juce_dsp.h"
 
 class Clipping
 {
@@ -26,13 +26,13 @@ class Clipping
         Clipping();
         ~Clipping();
 
-        void process(dsp::AudioBlock<float> block);
-        void prepare(dsp::ProcessSpec spec);
+        void process(juce::dsp::AudioBlock<float> block);
+        void prepare(juce::dsp::ProcessSpec spec);
         void reset();
 
     private:
-        dsp::WaveShaper<float> waveshaper;
-        dsp::Oversampling<float> oversampling;
+        juce::dsp::WaveShaper<float> waveshaper;
+        juce::dsp::Oversampling<float> oversampling;
 
         JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR(Clipping)
 };

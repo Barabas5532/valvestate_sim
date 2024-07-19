@@ -1,6 +1,6 @@
 #pragma once
 
-#include "../JuceLibraryCode/JuceHeader.h"
+#include "juce_dsp/juce_dsp.h"
 #include "Clipping.h"
 #include "Contour.h"
 #include "FMV.h"

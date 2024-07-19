@@ -18,7 +18,7 @@
 */
 
 #pragma once
-#include "../JuceLibraryCode/JuceHeader.h"
+#include "juce_dsp/juce_dsp.h"
 
 class ContourFilter
 {
@@ -26,16 +26,16 @@ class ContourFilter
     ContourFilter();
     ~ContourFilter();
 
-    void prepare(dsp::ProcessSpec spec);
-    void process(dsp::ProcessContextReplacing<float> context);
+    void prepare(juce::dsp::ProcessSpec spec);
+    void process(juce::dsp::ProcessContextReplacing<float> context);
     void reset();
 
     void setParameter(float p);
 
     private:
-    dsp::IIR::Coefficients<float> design(float p);
+    juce::dsp::IIR::Coefficients<float> design(float p);
 
-    dsp::IIR::Filter<float> filter;
+    juce::dsp::IIR::Filter<float> filter;
     float sampleRate;
 
     JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR(ContourFilter)

@@ -20,7 +20,7 @@
 #include "Clipping.h"
 #include "WaveShape.h"
 #define OVERSAMPLING_ORDER (3)
-#define FILTER_TYPE (dsp::Oversampling<float>::filterHalfBandFIREquiripple)
+#define FILTER_TYPE (juce::dsp::Oversampling<float>::filterHalfBandFIREquiripple)
 
 /* TODO using IIR filter here causes the audio to mute after some random amount
  * of time, generally a few seconds. Investigate why that's happening.
@@ -36,17 +36,17 @@ Clipping::Clipping() : oversampling(1, 0, FILTER_TYPE)
 
 Clipping::~Clipping() {}
 
-void Clipping::process(dsp::AudioBlock<float> block)
+void Clipping::process(juce::dsp::AudioBlock<float> block)
 {
     auto oversampledBlock = oversampling.processSamplesUp(block);
 
-    dsp::ProcessContextReplacing<float> ctx(oversampledBlock);
+    juce::dsp::ProcessContextReplacing<float> ctx(oversampledBlock);
     waveshaper.process(ctx);
 
     oversampling.processSamplesDown(block);
 }
 
-void Clipping::prepare(dsp::ProcessSpec spec)
+void Clipping::prepare(juce::dsp::ProcessSpec spec)
 {
     // Add stages to oversampling based on the samplerate. We want 8x
     // oversampling when the input rate is 44.1kHz or 48kHz.

@@ -19,60 +19,62 @@
 
 #pragma once
 
-#include "../JuceLibraryCode/JuceHeader.h"
 #include "ValvestateProcessorBase.h"
+#include "juce_audio_processors/juce_audio_processors.h"
 
-class ValvestateAudioProcessor  : public AudioProcessor
-{
+class ValvestateAudioProcessor : public juce::AudioProcessor {
 public:
-    explicit ValvestateAudioProcessor(std::unique_ptr<ValvestateProcessorBase> dsp);
-    ~ValvestateAudioProcessor();
+  ValvestateAudioProcessor(
+      const char *name,
+      std::unique_ptr<ValvestateProcessorBase> dsp);
+  ~ValvestateAudioProcessor();
 
-    void prepareToPlay (double sampleRate, int samplesPerBlock) override;
-    void releaseResources() override;
+  void prepareToPlay(double sampleRate, int samplesPerBlock) override;
+  void releaseResources() override;
 
-   #ifndef JucePlugin_PreferredChannelConfigurations
-    bool isBusesLayoutSupported (const BusesLayout& layouts) const override;
-   #endif
+#ifndef JucePlugin_PreferredChannelConfigurations
+  bool isBusesLayoutSupported(const BusesLayout &layouts) const override;
+#endif
 
-    using AudioProcessor::processBlock;
-    void processBlock (AudioBuffer<float>&, MidiBuffer&) override;
+  using AudioProcessor::processBlock;
+  void processBlock(juce::AudioBuffer<float> &, juce::MidiBuffer &) override;
 
-    AudioProcessorEditor* createEditor() override;
-    bool hasEditor() const override;
+  juce::AudioProcessorEditor *createEditor() override;
+  bool hasEditor() const override;
 
-    const String getName() const override;
+  const juce::String getName() const override;
 
-    bool acceptsMidi() const override;
-    bool producesMidi() const override;
-    bool isMidiEffect() const override;
-    double getTailLengthSeconds() const override;
+  bool acceptsMidi() const override;
+  bool producesMidi() const override;
+  bool isMidiEffect() const override;
+  double getTailLengthSeconds() const override;
 
-    int getNumPrograms() override;
-    int getCurrentProgram() override;
-    void setCurrentProgram (int index) override;
-    const String getProgramName (int index) override;
-    void changeProgramName (int index, const String& newName) override;
+  int getNumPrograms() override;
+  int getCurrentProgram() override;
+  void setCurrentProgram(int index) override;
+  const juce::String getProgramName(int index) override;
+  void changeProgramName(int index, const juce::String &newName) override;
 
-    void getStateInformation (MemoryBlock& destData) override;
-    void setStateInformation (const void* data, int sizeInBytes) override;
+  void getStateInformation(juce::MemoryBlock &destData) override;
+  void setStateInformation(const void *data, int sizeInBytes) override;
 
 private:
-    NormalisableRange<float> logRange;
+  juce::NormalisableRange<float> logRange;
 
 public:
-    AudioProcessorValueTreeState parameters;
+  juce::AudioProcessorValueTreeState parameters;
 
 private:
-    std::atomic<float> *od = nullptr;
-    std::atomic<float> *gain = nullptr;
-    std::atomic<float> *bass = nullptr;
-    std::atomic<float> *middle = nullptr;
-    std::atomic<float> *treble = nullptr;
-    std::atomic<float> *contour = nullptr;
-    std::atomic<float> *volume = nullptr;
-    
-    std::unique_ptr<ValvestateProcessorBase> dsp;
+  std::atomic<float> *od = nullptr;
+  std::atomic<float> *gain = nullptr;
+  std::atomic<float> *bass = nullptr;
+  std::atomic<float> *middle = nullptr;
+  std::atomic<float> *treble = nullptr;
+  std::atomic<float> *contour = nullptr;
+  std::atomic<float> *volume = nullptr;
 
-    JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR (ValvestateAudioProcessor)
+  const std::string_view name;
+  std::unique_ptr<ValvestateProcessorBase> dsp;
+
+  JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR(ValvestateAudioProcessor)
 };

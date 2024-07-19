@@ -43,7 +43,7 @@ ValvestateAudioProcessorEditor::ValvestateAudioProcessorEditor (ValvestateAudioP
     applySliderStyle(volume);
 
     applyLabelStyle(title);
-    title.setFont(Font(50));
+    title.setFont(juce::Font(50));
     applyLabelStyle(gainLabel);
     applyLabelStyle(buttonLabel);
     applyLabelStyle(bassLabel);
@@ -83,25 +83,25 @@ ValvestateAudioProcessorEditor::ValvestateAudioProcessorEditor (ValvestateAudioP
     setSize (700, 200);
 }
 
-void ValvestateAudioProcessorEditor::applySliderStyle(Slider &s)
+void ValvestateAudioProcessorEditor::applySliderStyle(juce::Slider &s)
 {
-    Slider::RotaryParameters p;
+    juce::Slider::RotaryParameters p;
     p.startAngleRadians = 2*3.1415/12*7;
     p.endAngleRadians = 2*3.1415/12*17;
     p.stopAtEnd = true;
 
-    s.setSliderStyle(Slider::RotaryHorizontalVerticalDrag);
-    s.setTextBoxStyle(Slider::NoTextBox, false, 0, 0);
+    s.setSliderStyle(juce::Slider::RotaryHorizontalVerticalDrag);
+    s.setTextBoxStyle(juce::Slider::NoTextBox, false, 0, 0);
     s.setPopupDisplayEnabled(true, true, nullptr);
     s.setLookAndFeel(&vsLookAndFeel);
     s.setRotaryParameters(p);
 }
 
-void ValvestateAudioProcessorEditor::applyLabelStyle(Label &l)
+void ValvestateAudioProcessorEditor::applyLabelStyle(juce::Label &l)
 {
-    auto f = Font(20, Font::FontStyleFlags::bold);
+    auto f = juce::Font(20, juce::Font::FontStyleFlags::bold);
     l.setFont(f);
-    l.setJustificationType(Justification::centredTop);
+    l.setJustificationType(juce::Justification::centredTop);
 }
 
 ValvestateAudioProcessorEditor::~ValvestateAudioProcessorEditor()
@@ -110,17 +110,17 @@ ValvestateAudioProcessorEditor::~ValvestateAudioProcessorEditor()
 }
 
 //==============================================================================
-void ValvestateAudioProcessorEditor::paint (Graphics& g)
+void ValvestateAudioProcessorEditor::paint (juce::Graphics& g)
 {
     // (Our component is opaque, so we must completely fill the background with a solid colour)
-    g.fillAll (getLookAndFeel().findColour (ResizableWindow::backgroundColourId));
+    g.fillAll (getLookAndFeel().findColour (juce::ResizableWindow::backgroundColourId));
 }
 
 void ValvestateAudioProcessorEditor::resized()
 {
     // This is generally where you'll want to lay out the positions of any
     // subcomponents in your editor..
-    Rectangle<int> area = getLocalBounds();
+    juce::Rectangle<int> area = getLocalBounds();
 
     title.setBounds(area.removeFromTop(70));
 

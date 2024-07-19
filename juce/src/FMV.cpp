@@ -23,13 +23,13 @@ FMVFilter::FMVFilter(){}
 
 FMVFilter::~FMVFilter(){}
 
-void FMVFilter::prepare(dsp::ProcessSpec spec)
+void FMVFilter::prepare(juce::dsp::ProcessSpec spec)
 {
     filter.prepare(spec);
     sampleRate = spec.sampleRate;
 }
 
-void FMVFilter::process(dsp::ProcessContextReplacing<float> context)
+void FMVFilter::process(juce::dsp::ProcessContextReplacing<float> context)
 {
     filter.process(context);
 }
@@ -100,5 +100,5 @@ void FMVFilter::setParameters(float l, float m, float t)
     float  A3 = -a0 + a1 * c- a2 * c2 + a3 * c3;
 
     filter.coefficients = 
-            new dsp::IIR::Coefficients<float>(B0, B1, B2, B3, A0, A1, A2, A3);
+            new juce::dsp::IIR::Coefficients<float>(B0, B1, B2, B3, A0, A1, A2, A3);
 }

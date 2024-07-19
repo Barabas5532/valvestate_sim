@@ -19,8 +19,7 @@
 
 #pragma once
 
-#include "../JuceLibraryCode/JuceHeader.h"
-
+#include "juce_dsp/juce_dsp.h"
 
 class InputFilter
 {
@@ -28,12 +27,12 @@ class InputFilter
     InputFilter();
     ~InputFilter();
 
-    void prepare(dsp::ProcessSpec spec);
-    void process(dsp::ProcessContextReplacing<float> context);
+    void prepare(juce::dsp::ProcessSpec spec);
+    void process(juce::dsp::ProcessContextReplacing<float> context);
     void reset();
 
     private:
-    dsp::IIR::Filter<float> filter;
+    juce::dsp::IIR::Filter<float> filter;
 
     JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR(InputFilter)
 };

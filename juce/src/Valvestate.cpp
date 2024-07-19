@@ -1,6 +1,6 @@
 #include "Valvestate.h"
 
-void ValvestateProcessor::prepare(const dsp::ProcessSpec &spec) {
+void ValvestateProcessor::prepare(const juce::dsp::ProcessSpec &spec) {
   input.prepare(spec);
   gaincontrol.prepare(spec);
   clipping.prepare(spec);
@@ -9,13 +9,13 @@ void ValvestateProcessor::prepare(const dsp::ProcessSpec &spec) {
 }
 
 void ValvestateProcessor::process(
-    const dsp::ProcessContextReplacing<float> &context) {
+    const juce::dsp::ProcessContextReplacing<float> &context) {
   input.process(context);
   gaincontrol.process(context);
   clipping.process(context.getOutputBlock());
   fmv.process(context);
   contour.process(context);
-  context.getOutputBlock().multiplyBy(Decibels::decibelsToGain(volume));
+  context.getOutputBlock().multiplyBy(juce::Decibels::decibelsToGain(volume));
 }
 
 void ValvestateProcessor::reset() {

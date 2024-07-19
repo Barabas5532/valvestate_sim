@@ -19,36 +19,33 @@
 
 #pragma once
 
-#include "../JuceLibraryCode/JuceHeader.h"
 #include "PluginProcessor.h"
 #include "UI.h"
 
 //==============================================================================
-/**
-*/
-class ValvestateAudioProcessorEditor  : public AudioProcessorEditor
+class ValvestateAudioProcessorEditor  : public juce::AudioProcessorEditor
 {
 public:
     ValvestateAudioProcessorEditor (ValvestateAudioProcessor&);
     ~ValvestateAudioProcessorEditor();
 
     //==============================================================================
-    void paint (Graphics&) override;
+    void paint (juce::Graphics&) override;
     void resized() override;
 
 private:
-    void applyLabelStyle(Label &l);
-    void applySliderStyle(Slider &s);
+    void applyLabelStyle(juce::Label &l);
+    void applySliderStyle(juce::Slider &s);
 
     ValvestateAudioProcessor& processor;
 
     ValvestateLookAndFeel vsLookAndFeel;
 
-    typedef AudioProcessorValueTreeState::SliderAttachment SliderAttachment;
-    typedef AudioProcessorValueTreeState::ButtonAttachment ButtonAttachment;
+    typedef juce::AudioProcessorValueTreeState::SliderAttachment SliderAttachment;
+    typedef juce::AudioProcessorValueTreeState::ButtonAttachment ButtonAttachment;
 
-    Slider gain, bass, middle, treble, contour, volume;
-    ToggleButton button;
+    juce::Slider gain, bass, middle, treble, contour, volume;
+    juce::ToggleButton button;
 
     std::unique_ptr<SliderAttachment> gainAttachment;
     std::unique_ptr<SliderAttachment> bassAttachment;
@@ -58,14 +55,14 @@ private:
     std::unique_ptr<SliderAttachment> volumeAttachment;
     std::unique_ptr<ButtonAttachment> buttonAttachment;
 
-    Label title;
-    Label buttonLabel;
-    Label gainLabel;
-    Label bassLabel;
-    Label middleLabel;
-    Label trebleLabel;
-    Label contourLabel;
-    Label volumeLabel;
+    juce::Label title;
+    juce::Label buttonLabel;
+    juce::Label gainLabel;
+    juce::Label bassLabel;
+    juce::Label middleLabel;
+    juce::Label trebleLabel;
+    juce::Label contourLabel;
+    juce::Label volumeLabel;
 
     JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR (ValvestateAudioProcessorEditor)
 };

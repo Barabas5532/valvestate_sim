@@ -1,6 +1,6 @@
 #pragma once
 
-#include "../JuceLibraryCode/JuceHeader.h"
+#include "juce_dsp/juce_dsp.h"
 
 class ValvestateProcessorBase : public juce::dsp::ProcessorBase {
 public:
