@@ -5,6 +5,7 @@ set(CMAKE_EXPORT_COMPILE_COMMANDS ON)
 add_subdirectory(JUCE)
 
 juce_add_plugin(Valvestate
+    BUNDLE_ID "me.barabas.valvestate"
     COMPANY_NAME "Barabas Raffai"
     PLUGIN_MANUFACTURER_CODE BaRa
     PLUGIN_CODE Valv
@@ -31,7 +32,6 @@ target_include_directories(Valvestate
 
 target_compile_definitions(Valvestate
     PUBLIC
-        JUCE_DISPLAY_SPLASH_SCREEN=0
         JUCE_WEB_BROWSER=0
         JUCE_USE_CURL=0
         JUCE_VST3_CAN_REPLACE_VST2=0)
