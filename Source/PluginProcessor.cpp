@@ -18,8 +18,7 @@
 */
 
 #include "PluginProcessor.h"
-#include "PluginEditor.h"
-#include "WaveShape.h"
+#include "ui/PluginEditor.h"
 
 ValvestateAudioProcessor::ValvestateAudioProcessor() : 
      AudioProcessor (BusesProperties()

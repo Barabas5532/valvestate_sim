@@ -19,12 +19,12 @@
 
 #pragma once
 
-#include "../JuceLibraryCode/JuceHeader.h"
-#include "InputFilter.h"
-#include "GainControl.h"
-#include "Clipping.h"
-#include "FMV.h"
-#include "Contour.h"
+#include "JuceHeader.h"
+#include "dsp/InputFilter.h"
+#include "dsp/GainControl.h"
+#include "dsp/Clipping.h"
+#include "dsp/FMV.h"
+#include "dsp/Contour.h"
 
 class ValvestateAudioProcessor  : public AudioProcessor
 {
