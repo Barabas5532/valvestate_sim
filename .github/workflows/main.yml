@@ -14,7 +14,7 @@ env:
   CCACHE_DIR: "${{ github.workspace }}/ccache"
   
 jobs:
-  build-plugins:
+  build:
     runs-on: ubuntu-22.04
     strategy:
       matrix:
@@ -39,7 +39,7 @@ jobs:
           libglu1-mesa-dev mesa-common-dev
 
       - name: ccache
-        uses: actions/cache@v2
+        uses: actions/cache@v4
         with:
           path: ${{ env.CCACHE_DIR }}
           key: ccache-v1-${{ github.job }}-${{matrix.build_type}}-${{ github.sha }}
