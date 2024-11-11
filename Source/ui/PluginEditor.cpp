@@ -19,20 +19,56 @@
 
 #include "PluginProcessor.h"
 #include "PluginEditor.h"
+#include "BackgroundBinaryData.h"
+#include "bass_binary_data.h"
+#include "contour_binary_data.h"
+#include "gain_binary_data.h"
+#include "middle_binary_data.h"
+#include "treble_binary_data.h"
+#include "volume_binary_data.h"
+
+static const char *get_gain_image_resource(size_t i, int &dataSizeInBytes) {
+  jassert(i < gain_binary_data::namedResourceListSize);
+  return gain_binary_data::getNamedResource(gain_binary_data::namedResourceList[i],
+                                          dataSizeInBytes);
+}
+
+static const char *get_bass_image_resource(size_t i, int &dataSizeInBytes) {
+  jassert(i < bass_binary_data::namedResourceListSize);
+  return bass_binary_data::getNamedResource(bass_binary_data::namedResourceList[i],
+                                          dataSizeInBytes);
+}
+
+static const char *get_middle_image_resource(size_t i, int &dataSizeInBytes) {
+  jassert(i < middle_binary_data::namedResourceListSize);
+  return middle_binary_data::getNamedResource(middle_binary_data::namedResourceList[i],
+                                          dataSizeInBytes);
+}
+
+static const char *get_treble_image_resource(size_t i, int &dataSizeInBytes) {
+  jassert(i < treble_binary_data::namedResourceListSize);
+  return treble_binary_data::getNamedResource(treble_binary_data::namedResourceList[i],
+                                          dataSizeInBytes);
+}
+
+static const char *get_contour_image_resource(size_t i, int &dataSizeInBytes) {
+  jassert(i < contour_binary_data::namedResourceListSize);
+  return contour_binary_data::getNamedResource(contour_binary_data::namedResourceList[i],
+                                          dataSizeInBytes);
+}
+
+static const char *get_volume_image_resource(size_t i, int &dataSizeInBytes) {
+  jassert(i < volume_binary_data::namedResourceListSize);
+  return volume_binary_data::getNamedResource(volume_binary_data::namedResourceList[i],
+                                          dataSizeInBytes);
+}
 
 //==============================================================================
 ValvestateAudioProcessorEditor::ValvestateAudioProcessorEditor (ValvestateAudioProcessor& p)
-    : AudioProcessorEditor (&p), processor (p), 
-    title("titleLabel", "HYBRID 8100"), 
-    buttonLabel("OD1/OD2", "MODE"),
-    gainLabel("gainLabel", "GAIN"), 
-    bassLabel("bassLabel", "BASS"), 
-    middleLabel("middleLabel", "MIDDLE"), 
-    trebleLabel("trebleLabel", "TREBLE"), 
-    contourLabel("contourLabel", "CONTOUR"), 
-    volumeLabel("volumeLabel", "VOLUME")
+    : AudioProcessorEditor (&p), processor (p), knobGain(get_gain_image_resource), knobBass(get_bass_image_resource), knobMiddle(get_middle_image_resource), knobTreble(get_treble_image_resource), knobContour(get_contour_image_resource), knobVolume(get_volume_image_resource)
 {
     setResizable(false, false);
+    
     setLookAndFeel(&vsLookAndFeel);
 
     applySliderStyle(gain);
@@ -42,16 +78,6 @@ ValvestateAudioProcessorEditor::ValvestateAudioProcessorEditor (ValvestateAudioP
     applySliderStyle(contour);
     applySliderStyle(volume);
 
-    applyLabelStyle(title);
-    title.setFont(Font(50));
-    applyLabelStyle(gainLabel);
-    applyLabelStyle(buttonLabel);
-    applyLabelStyle(bassLabel);
-    applyLabelStyle(middleLabel);
-    applyLabelStyle(trebleLabel);
-    applyLabelStyle(contourLabel);
-    applyLabelStyle(volumeLabel);
-
     gainAttachment.reset(new SliderAttachment(processor.parameters, "gain", gain));
     bassAttachment.reset(new SliderAttachment(processor.parameters, "bass", bass));
     middleAttachment.reset(new SliderAttachment(processor.parameters, "middle", middle));
@@ -60,7 +86,20 @@ ValvestateAudioProcessorEditor::ValvestateAudioProcessorEditor (ValvestateAudioP
     volumeAttachment.reset(new SliderAttachment(processor.parameters, "volume", volume));
 
     buttonAttachment.reset(new ButtonAttachment(processor.parameters, "od", button));
-    button.onClick = [this] { this->repaint(); };
+
+    knobGainAttachment.reset(new KnobAttachment(processor.parameters, "gain", knobGain));
+    knobBassAttachment.reset(new KnobAttachment(processor.parameters, "bass", knobBass));
+    knobMiddleAttachment.reset(new KnobAttachment(processor.parameters, "middle", knobMiddle));
+    knobTrebleAttachment.reset(new KnobAttachment(processor.parameters, "treble", knobTreble));
+    knobContourAttachment.reset(new KnobAttachment(processor.parameters, "contour", knobContour));
+    knobVolumeAttachment.reset(new KnobAttachment(processor.parameters, "volume", knobVolume));
+
+    addAndMakeVisible(knobGain);
+    addAndMakeVisible(knobBass);
+    addAndMakeVisible(knobMiddle);
+    addAndMakeVisible(knobTreble);
+    addAndMakeVisible(knobContour);
+    addAndMakeVisible(knobVolume);
 
     addAndMakeVisible(button);
     addAndMakeVisible(gain);
@@ -70,38 +109,20 @@ ValvestateAudioProcessorEditor::ValvestateAudioProcessorEditor (ValvestateAudioP
     addAndMakeVisible(contour);
     addAndMakeVisible(volume);
 
-    addAndMakeVisible(title);
-    addAndMakeVisible(buttonLabel);
-    addAndMakeVisible(gainLabel);
-    addAndMakeVisible(gainLabel);
-    addAndMakeVisible(bassLabel);
-    addAndMakeVisible(middleLabel);
-    addAndMakeVisible(trebleLabel);
-    addAndMakeVisible(contourLabel);
-    addAndMakeVisible(volumeLabel);
+    backgroundImage = ImageCache::getFromMemory (BackgroundBinaryData::background_png,
+                                                (size_t)BackgroundBinaryData::background_pngSize);
 
-    setSize (700, 200);
+  setSize(UI_WIDTH, UI_HEIGHT);
 }
 
 void ValvestateAudioProcessorEditor::applySliderStyle(Slider &s)
 {
-    Slider::RotaryParameters p;
-    p.startAngleRadians = 2*3.1415/12*7;
-    p.endAngleRadians = 2*3.1415/12*17;
-    p.stopAtEnd = true;
-
     s.setSliderStyle(Slider::RotaryHorizontalVerticalDrag);
     s.setTextBoxStyle(Slider::NoTextBox, false, 0, 0);
+#if _DEBUG
     s.setPopupDisplayEnabled(true, true, nullptr);
+#endif
     s.setLookAndFeel(&vsLookAndFeel);
-    s.setRotaryParameters(p);
-}
-
-void ValvestateAudioProcessorEditor::applyLabelStyle(Label &l)
-{
-    auto f = Font(20, Font::FontStyleFlags::bold);
-    l.setFont(f);
-    l.setJustificationType(Justification::centredTop);
 }
 
 ValvestateAudioProcessorEditor::~ValvestateAudioProcessorEditor()
@@ -109,35 +130,39 @@ ValvestateAudioProcessorEditor::~ValvestateAudioProcessorEditor()
     setLookAndFeel(nullptr);
 }
 
-//==============================================================================
 void ValvestateAudioProcessorEditor::paint (Graphics& g)
 {
-    // (Our component is opaque, so we must completely fill the background with a solid colour)
-    g.fillAll (getLookAndFeel().findColour (ResizableWindow::backgroundColourId));
+  g.drawImageAt(backgroundImage, 0, 0, false);
 }
 
 void ValvestateAudioProcessorEditor::resized()
 {
-    // This is generally where you'll want to lay out the positions of any
-    // subcomponents in your editor..
-    Rectangle<int> area = getLocalBounds();
+    button.setBounds(100, 100, 100, 100);
+    gain.setBounds(Rectangle(Point{409, 204}, Point{474, 266}));
+    bass.setBounds(Rectangle(Point{486, 204}, Point{546, 266}));
+    middle.setBounds(Rectangle(Point{558, 204}, Point{616, 266}));
+    treble.setBounds(Rectangle(Point{629, 204}, Point{689, 266}));
+    contour.setBounds(Rectangle(Point{702, 204}, Point{760, 266}));
+    volume.setBounds(Rectangle(Point{774, 204}, Point{843, 266}));
 
-    title.setBounds(area.removeFromTop(70));
-
-    auto knobArea = area.removeFromTop(100);
-    button.setBounds(knobArea.removeFromLeft(100));
-    gain.setBounds(knobArea.removeFromLeft(100));
-    bass.setBounds(knobArea.removeFromLeft(100));
-    middle.setBounds(knobArea.removeFromLeft(100));
-    treble.setBounds(knobArea.removeFromLeft(100));
-    contour.setBounds(knobArea.removeFromLeft(100));
-    volume.setBounds(knobArea.removeFromLeft(100));
-
-    buttonLabel.setBounds(area.removeFromLeft(100));
-    gainLabel.setBounds(area.removeFromLeft(100));
-    bassLabel.setBounds(area.removeFromLeft(100));
-    middleLabel.setBounds(area.removeFromLeft(100));
-    trebleLabel.setBounds(area.removeFromLeft(100));
-    contourLabel.setBounds(area.removeFromLeft(100));
-    volumeLabel.setBounds(area.removeFromLeft(100));
+    knobGain.setBounds(getLocalBounds());
+    knobBass.setBounds(getLocalBounds());
+    knobMiddle.setBounds(getLocalBounds());
+    knobTreble.setBounds(getLocalBounds());
+    knobContour.setBounds(getLocalBounds());
+    knobVolume.setBounds(getLocalBounds());
 }
+
+#if _DEBUG
+void ValvestateAudioProcessorEditor::mouseDown(const MouseEvent &event) {
+  Component::mouseDown(event);
+  
+  Logger::outputDebugString(juce::String::formatted("mouse down %d %d", event.x, event.y));
+}
+
+void ValvestateAudioProcessorEditor::mouseUp(const MouseEvent &event) {
+  Component::mouseUp(event);
+
+  Logger::outputDebugString(juce::String::formatted("mouse up %d %d", event.x, event.y));
+}
+#endif

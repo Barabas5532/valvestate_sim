@@ -21,7 +21,7 @@
 
 #include "../JuceLibraryCode/JuceHeader.h"
 #include "PluginProcessor.h"
-#include "UI.h"
+#include "ui.h"
 
 //==============================================================================
 /**
@@ -36,8 +36,12 @@ public:
     void paint (Graphics&) override;
     void resized() override;
 
+#if _DEBUG
+    void mouseDown(const juce::MouseEvent &event) override;
+    void mouseUp(const juce::MouseEvent &event) override;
+#endif
+
 private:
-    void applyLabelStyle(Label &l);
     void applySliderStyle(Slider &s);
 
     ValvestateAudioProcessor& processor;
@@ -58,14 +62,25 @@ private:
     std::unique_ptr<SliderAttachment> volumeAttachment;
     std::unique_ptr<ButtonAttachment> buttonAttachment;
 
-    Label title;
-    Label buttonLabel;
-    Label gainLabel;
-    Label bassLabel;
-    Label middleLabel;
-    Label trebleLabel;
-    Label contourLabel;
-    Label volumeLabel;
+    Image backgroundImage;
+    
+    ImageKnob knobGain;
+    ImageKnob knobBass;
+    ImageKnob knobMiddle;
+    ImageKnob knobTreble;
+    ImageKnob knobContour;
+    ImageKnob knobVolume;
+
+    std::unique_ptr<KnobAttachment> knobGainAttachment;
+    std::unique_ptr<KnobAttachment> knobBassAttachment;
+    std::unique_ptr<KnobAttachment> knobMiddleAttachment;
+    std::unique_ptr<KnobAttachment> knobTrebleAttachment;
+    std::unique_ptr<KnobAttachment> knobContourAttachment;
+    std::unique_ptr<KnobAttachment> knobVolumeAttachment;
+      
+
+    static constexpr int UI_WIDTH = 1267;
+    static constexpr int UI_HEIGHT = 712;
 
     JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR (ValvestateAudioProcessorEditor)
 };

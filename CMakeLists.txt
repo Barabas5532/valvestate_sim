@@ -3,6 +3,7 @@ project(Valvestate VERSION 0.0.1)
 set(CMAKE_EXPORT_COMPILE_COMMANDS ON)
 
 add_subdirectory(JUCE)
+add_subdirectory(Images)
 
 juce_add_plugin(Valvestate
     BUNDLE_ID "me.barabas.valvestate"
@@ -38,6 +39,14 @@ target_compile_definitions(Valvestate
 
 target_link_libraries(Valvestate
     PRIVATE
+        ValvestateBackgroundBinaryData
+        ValvestateBassBinaryData
+        ValvestateContourBinaryData
+        ValvestateGainBinaryData
+        ValvestateGainBinaryData
+        ValvestateMiddleBinaryData
+        ValvestateTrebleBinaryData
+        ValvestateVolumeBinaryData
         juce::juce_audio_utils
         juce::juce_dsp
     PUBLIC

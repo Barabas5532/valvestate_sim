@@ -25,7 +25,7 @@ jobs:
         with:
           submodules: recursive
           
-      - run: sudo apt update && sudo apt install ccache ninja-build
+      - run: sudo apt update && sudo apt install ccache ninja-build imagemagick
 
       - name: Install JUCE dependencies
         run: >
