@@ -1,3 +1,5 @@
+cmake_minimum_required(VERSION 3.18 FATAL_ERROR)
+
 set(KNOB_IMAGE_COUNT 256)
 
 juce_add_binary_data(ValvestateBackgroundBinaryData SOURCES
@@ -5,6 +7,8 @@ juce_add_binary_data(ValvestateBackgroundBinaryData SOURCES
                      HEADER_NAME BackgroundBinaryData.h
                      NAMESPACE BackgroundBinaryData
 )
+
+find_program(IMAGEMAGICK_CONVERT magick convert REQUIRED)
 
 function(add_knob_binary_data target knob_name)
 set(knob_list "")
@@ -20,7 +24,7 @@ foreach(knob_index RANGE 1 ${KNOB_IMAGE_COUNT})
     set(knob_file "${knob_name}/Image${padded_knob_index}.png")
     set(out_file "${CMAKE_CURRENT_BINARY_DIR}/${knob_name}/Image${padded_knob_index}.png")
     add_custom_command(OUTPUT ${out_file}
-                       COMMAND bash ${CMAKE_CURRENT_LIST_DIR}/convert.sh ${CMAKE_CURRENT_LIST_DIR}/${knob_file} ${out_file}
+                       COMMAND ${IMAGEMAGICK_CONVERT} ${CMAKE_CURRENT_LIST_DIR}/${knob_file} -channel A -gamma 0.45 +channel ${out_file}
                        MAIN_DEPENDENCY ${knob_file}
     )
 
