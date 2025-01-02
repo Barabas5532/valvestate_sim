@@ -135,15 +135,20 @@ void ValvestateAudioProcessorEditor::paint (Graphics& g)
   g.drawImageAt(backgroundImage, 0, 0, false);
 }
 
+static Rectangle<int> getKnobBounds(Point<int> p) {
+  return Rectangle{p, p + Point{60, 60}};
+}
+
 void ValvestateAudioProcessorEditor::resized()
 {
     button.setBounds(100, 100, 100, 100);
-    gain.setBounds(Rectangle(Point{409, 204}, Point{474, 266}));
-    bass.setBounds(Rectangle(Point{486, 204}, Point{546, 266}));
-    middle.setBounds(Rectangle(Point{558, 204}, Point{616, 266}));
-    treble.setBounds(Rectangle(Point{629, 204}, Point{689, 266}));
-    contour.setBounds(Rectangle(Point{702, 204}, Point{760, 266}));
-    volume.setBounds(Rectangle(Point{774, 204}, Point{843, 266}));
+
+    gain.setBounds(getKnobBounds(Point{398, 222}));
+    bass.setBounds(getKnobBounds(Point{486, 220}));
+    middle.setBounds(getKnobBounds(Point{561, 220}));
+    treble.setBounds(getKnobBounds(Point{632, 220}));
+    contour.setBounds(getKnobBounds(Point{704, 219}));
+    volume.setBounds(getKnobBounds(Point{781, 221}));
 
     knobGain.setBounds(getLocalBounds());
     knobBass.setBounds(getLocalBounds());
@@ -152,6 +157,7 @@ void ValvestateAudioProcessorEditor::resized()
     knobContour.setBounds(getLocalBounds());
     knobVolume.setBounds(getLocalBounds());
 }
+
 
 #if _DEBUG
 void ValvestateAudioProcessorEditor::mouseDown(const MouseEvent &event) {
