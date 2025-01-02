@@ -4,6 +4,7 @@ set(KNOB_IMAGE_COUNT 256)
 
 juce_add_binary_data(ValvestateBackgroundBinaryData SOURCES
                      background.png
+                     led.png
                      HEADER_NAME BackgroundBinaryData.h
                      NAMESPACE BackgroundBinaryData
 )

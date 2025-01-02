@@ -111,6 +111,9 @@ ValvestateAudioProcessorEditor::ValvestateAudioProcessorEditor (ValvestateAudioP
 
     backgroundImage = ImageCache::getFromMemory (BackgroundBinaryData::background_png,
                                                 (size_t)BackgroundBinaryData::background_pngSize);
+                                                
+    ledImage = ImageCache::getFromMemory (BackgroundBinaryData::led_png,
+                                                 (size_t)BackgroundBinaryData::led_pngSize);
 
   setSize(UI_WIDTH, UI_HEIGHT);
 }
@@ -133,6 +136,11 @@ ValvestateAudioProcessorEditor::~ValvestateAudioProcessorEditor()
 void ValvestateAudioProcessorEditor::paint (Graphics& g)
 {
   g.drawImageAt(backgroundImage, 0, 0, false);
+  
+  auto ledImageHalfWidth = ledImage.getWidth() / 2;
+  auto ledImageHalfHeight = ledImage.getHeight() / 2;
+  g.drawImageAt(ledImage, 471 - ledImageHalfWidth, 250 - ledImageHalfHeight, false);
+  g.drawImageAt(ledImage, 917 - ledImageHalfWidth, 250 - ledImageHalfHeight, false);
 }
 
 static Rectangle<int> getKnobBounds(Point<int> p) {
@@ -141,7 +149,7 @@ static Rectangle<int> getKnobBounds(Point<int> p) {
 
 void ValvestateAudioProcessorEditor::resized()
 {
-    button.setBounds(100, 100, 100, 100);
+    button.setBounds(Rectangle{Point{464, 266}, Point{478, 282}});
 
     gain.setBounds(getKnobBounds(Point{398, 222}));
     bass.setBounds(getKnobBounds(Point{486, 220}));

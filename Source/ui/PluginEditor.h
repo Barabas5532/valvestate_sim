@@ -63,6 +63,7 @@ private:
     std::unique_ptr<ButtonAttachment> buttonAttachment;
 
     Image backgroundImage;
+    Image ledImage;
     
     ImageKnob knobGain;
     ImageKnob knobBass;
