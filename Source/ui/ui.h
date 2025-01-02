@@ -160,7 +160,8 @@ class ImageKnob final : public juce::Component {
 public:
   explicit ImageKnob(const std::function<const char*(size_t, int&)>& get_image_resource)
       : param{0.5}, get_image_resource{get_image_resource} {
-    
+    setInterceptsMouseClicks(false, false);
+
     for (size_t i = 0; i < IMAGE_COUNT; ++i)
     {
       int size = 0;
