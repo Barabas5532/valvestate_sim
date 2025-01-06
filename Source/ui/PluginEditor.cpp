@@ -93,12 +93,12 @@ ValvestateAudioProcessorEditor::ValvestateAudioProcessorEditor (ValvestateAudioP
     odAttachment.reset(new ButtonAttachment(processor.parameters, "od", odButton));
     odLedAttachment.reset(new ButtonAttachment(processor.parameters, "od", odLed));
 
-    knobGainAttachment.reset(new KnobAttachment(processor.parameters, "gain", knobGain));
-    knobBassAttachment.reset(new KnobAttachment(processor.parameters, "bass", knobBass));
-    knobMiddleAttachment.reset(new KnobAttachment(processor.parameters, "middle", knobMiddle));
-    knobTrebleAttachment.reset(new KnobAttachment(processor.parameters, "treble", knobTreble));
-    knobContourAttachment.reset(new KnobAttachment(processor.parameters, "contour", knobContour));
-    knobVolumeAttachment.reset(new KnobAttachment(processor.parameters, "volume", knobVolume));
+    knobGainAttachment.reset(new SliderAttachment(processor.parameters, "gain", knobGain));
+    knobBassAttachment.reset(new SliderAttachment(processor.parameters, "bass", knobBass));
+    knobMiddleAttachment.reset(new SliderAttachment(processor.parameters, "middle", knobMiddle));
+    knobTrebleAttachment.reset(new SliderAttachment(processor.parameters, "treble", knobTreble));
+    knobContourAttachment.reset(new SliderAttachment(processor.parameters, "contour", knobContour));
+    knobVolumeAttachment.reset(new SliderAttachment(processor.parameters, "volume", knobVolume));
 
     addAndMakeVisible(knobGain);
     addAndMakeVisible(knobBass);

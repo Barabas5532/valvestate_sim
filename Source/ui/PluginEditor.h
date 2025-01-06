@@ -75,13 +75,12 @@ private:
     
     ImageLed odLed;
 
-    std::unique_ptr<KnobAttachment> knobGainAttachment;
-    std::unique_ptr<KnobAttachment> knobBassAttachment;
-    std::unique_ptr<KnobAttachment> knobMiddleAttachment;
-    std::unique_ptr<KnobAttachment> knobTrebleAttachment;
-    std::unique_ptr<KnobAttachment> knobContourAttachment;
-    std::unique_ptr<KnobAttachment> knobVolumeAttachment;
-      
+    std::unique_ptr<SliderAttachment> knobGainAttachment;
+    std::unique_ptr<SliderAttachment> knobBassAttachment;
+    std::unique_ptr<SliderAttachment> knobMiddleAttachment;
+    std::unique_ptr<SliderAttachment> knobTrebleAttachment;
+    std::unique_ptr<SliderAttachment> knobContourAttachment;
+    std::unique_ptr<SliderAttachment> knobVolumeAttachment;
 
     static constexpr int UI_WIDTH = 1267;
     static constexpr int UI_HEIGHT = 712;
