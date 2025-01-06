@@ -294,3 +294,29 @@ private:
   ImageKnob& slider;
   ParameterAttachment attachment;
 };
+
+/**
+ * Draws an LED using an image file when the parameter is enabled
+ */
+class ImageLed final : public juce::Button {
+public:
+  explicit ImageLed(
+      const String &buttonName,
+      const std::function<const char *(int &)> &get_image_resource)
+      : Button(buttonName), get_image_resource{get_image_resource} {
+    setInterceptsMouseClicks(false, false);
+
+    int size = 0;
+    auto memory = get_image_resource(size);
+    image = ImageCache::getFromMemory(memory, size);
+  }
+
+  void paintButton(Graphics &g, bool, bool) override {
+    if (getToggleState())
+      g.drawImageAt(image, 0, 0, false);
+  };
+
+private:
+  Image image;
+  std::function<const char *(int &dataSizeInBytes)> get_image_resource;
+};

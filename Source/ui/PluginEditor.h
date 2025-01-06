@@ -52,7 +52,7 @@ private:
     typedef AudioProcessorValueTreeState::ButtonAttachment ButtonAttachment;
 
     Slider gain, bass, middle, treble, contour, volume;
-    ToggleButton button;
+    ToggleButton odButton;
 
     std::unique_ptr<SliderAttachment> gainAttachment;
     std::unique_ptr<SliderAttachment> bassAttachment;
@@ -60,7 +60,8 @@ private:
     std::unique_ptr<SliderAttachment> trebleAttachment;
     std::unique_ptr<SliderAttachment> contourAttachment;
     std::unique_ptr<SliderAttachment> volumeAttachment;
-    std::unique_ptr<ButtonAttachment> buttonAttachment;
+    std::unique_ptr<ButtonAttachment> odAttachment;
+    std::unique_ptr<ButtonAttachment> odLedAttachment;
 
     Image backgroundImage;
     Image ledImage;
@@ -71,6 +72,8 @@ private:
     ImageKnob knobTreble;
     ImageKnob knobContour;
     ImageKnob knobVolume;
+    
+    ImageLed odLed;
 
     std::unique_ptr<KnobAttachment> knobGainAttachment;
     std::unique_ptr<KnobAttachment> knobBassAttachment;

@@ -63,9 +63,14 @@ static const char *get_volume_image_resource(size_t i, int &dataSizeInBytes) {
                                           dataSizeInBytes);
 }
 
+static const char *get_led_image_resource(int &dataSizeInBytes) {
+  dataSizeInBytes = BackgroundBinaryData::led_pngSize;
+  return BackgroundBinaryData::led_png;
+}
+
 //==============================================================================
 ValvestateAudioProcessorEditor::ValvestateAudioProcessorEditor (ValvestateAudioProcessor& p)
-    : AudioProcessorEditor (&p), processor (p), knobGain(get_gain_image_resource), knobBass(get_bass_image_resource), knobMiddle(get_middle_image_resource), knobTreble(get_treble_image_resource), knobContour(get_contour_image_resource), knobVolume(get_volume_image_resource)
+    : AudioProcessorEditor (&p), processor (p), knobGain(get_gain_image_resource), knobBass(get_bass_image_resource), knobMiddle(get_middle_image_resource), knobTreble(get_treble_image_resource), knobContour(get_contour_image_resource), knobVolume(get_volume_image_resource), odLed("od_led", get_led_image_resource)
 {
     setResizable(false, false);
     
@@ -85,7 +90,8 @@ ValvestateAudioProcessorEditor::ValvestateAudioProcessorEditor (ValvestateAudioP
     contourAttachment.reset(new SliderAttachment(processor.parameters, "contour", contour));
     volumeAttachment.reset(new SliderAttachment(processor.parameters, "volume", volume));
 
-    buttonAttachment.reset(new ButtonAttachment(processor.parameters, "od", button));
+    odAttachment.reset(new ButtonAttachment(processor.parameters, "od", odButton));
+    odLedAttachment.reset(new ButtonAttachment(processor.parameters, "od", odLed));
 
     knobGainAttachment.reset(new KnobAttachment(processor.parameters, "gain", knobGain));
     knobBassAttachment.reset(new KnobAttachment(processor.parameters, "bass", knobBass));
@@ -101,13 +107,15 @@ ValvestateAudioProcessorEditor::ValvestateAudioProcessorEditor (ValvestateAudioP
     addAndMakeVisible(knobContour);
     addAndMakeVisible(knobVolume);
 
-    addAndMakeVisible(button);
+    addAndMakeVisible(odButton);
     addAndMakeVisible(gain);
     addAndMakeVisible(bass);
     addAndMakeVisible(middle);
     addAndMakeVisible(treble);
     addAndMakeVisible(contour);
     addAndMakeVisible(volume);
+
+    addAndMakeVisible(odLed);
 
     backgroundImage = ImageCache::getFromMemory (BackgroundBinaryData::background_png,
                                                 (size_t)BackgroundBinaryData::background_pngSize);
@@ -139,7 +147,6 @@ void ValvestateAudioProcessorEditor::paint (Graphics& g)
   
   auto ledImageHalfWidth = ledImage.getWidth() / 2;
   auto ledImageHalfHeight = ledImage.getHeight() / 2;
-  g.drawImageAt(ledImage, 471 - ledImageHalfWidth, 250 - ledImageHalfHeight, false);
   g.drawImageAt(ledImage, 917 - ledImageHalfWidth, 250 - ledImageHalfHeight, false);
 }
 
@@ -149,7 +156,7 @@ static Rectangle<int> getKnobBounds(Point<int> p) {
 
 void ValvestateAudioProcessorEditor::resized()
 {
-    button.setBounds(Rectangle{Point{464, 266}, Point{478, 282}});
+  odButton.setBounds(Rectangle{Point{464, 266}, Point{478, 282}});
 
     gain.setBounds(getKnobBounds(Point{398, 222}));
     bass.setBounds(getKnobBounds(Point{486, 220}));
@@ -164,8 +171,13 @@ void ValvestateAudioProcessorEditor::resized()
     knobTreble.setBounds(getLocalBounds());
     knobContour.setBounds(getLocalBounds());
     knobVolume.setBounds(getLocalBounds());
-}
 
+    auto ledImageHalfWidth = ledImage.getWidth() / 2;
+    auto ledImageHalfHeight = ledImage.getHeight() / 2;
+    odLed.setBounds(ledImage.getBounds());
+    odLed.setTopLeftPosition(
+        {471 - ledImageHalfWidth, 250 - ledImageHalfHeight});
+}
 
 #if _DEBUG
 void ValvestateAudioProcessorEditor::mouseDown(const MouseEvent &event) {
