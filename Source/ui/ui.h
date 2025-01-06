@@ -26,91 +26,12 @@
 
 class ValvestateLookAndFeel : public LookAndFeel_V4 {
 public:
-  ValvestateLookAndFeel() {
-#ifndef _DEBUG
-    setColour(Slider::thumbColourId, Colours::transparentBlack);
-    setColour(Slider::rotarySliderFillColourId, Colours::transparentBlack);
-    setColour(Slider::rotarySliderOutlineColourId, Colours::transparentBlack);
-#endif
+  ValvestateLookAndFeel() {}
 
-    setColour(Label::textColourId, Colours::black);
-  }
-
-#if 0
-  void drawRotarySlider(Graphics &g, int x, int y, int width, int height,
-                        float sliderPos, const float rotaryStartAngle,
-                        const float rotaryEndAngle, Slider &slider) override {
-    float margin = 15;
-    auto radius = jmin(width / 2, height / 2) - margin;
-    auto centreX = x + width * 0.5f;
-    auto centreY = y + height * 0.5f;
-    auto rx = centreX - radius;
-    auto ry = centreY - radius;
-    auto rw = radius * 2.0f;
-    auto angle =
-        rotaryStartAngle + sliderPos * (rotaryEndAngle - rotaryStartAngle);
-
-    // shadow
-    Point<int> point(0, 0);
-    Colour shadowColour(0x55000000);
-    auto shadowSize = 10;
-
-    DropShadow s(shadowColour, shadowSize, point);
-    Path p;
-
-    p.addEllipse(rx - shadowSize / 2.0f, ry - shadowSize / 2.0f,
-                 rw + shadowSize, rw + shadowSize);
-    s.drawForPath(g, p);
-
-    // ticks
-    g.setColour(Colours::black);
-    auto tickLength = 15.0f;
-    auto tickThickness = 3.0f;
-    int nTicks = 21;
-    for (int i = 0; i < nTicks; ++i) {
-      p.clear();
-      if (i % 2) {
-        float thickness = tickThickness / 2;
-        p.addRectangle(-thickness * 0.5f, -radius, thickness, -tickLength / 2);
-      } else {
-        p.addRectangle(-tickThickness * 0.5f, -radius, tickThickness,
-                       -tickLength);
-      }
-
-      auto tmpAngle =
-          rotaryStartAngle +
-          i / (float)(nTicks - 1) * (rotaryEndAngle - rotaryStartAngle);
-
-      p.applyTransform(
-          AffineTransform::rotation(tmpAngle).translated(centreX, centreY));
-      g.fillPath(p);
-    }
-
-    // knob body
-    Image knobImage[5];
-    knobImage[0] = ImageCache::getFromMemory(BinaryData::knob0_png,
-                                             (size_t)BinaryData::knob0_pngSize);
-    knobImage[1] = ImageCache::getFromMemory(BinaryData::knob1_png,
-                                             (size_t)BinaryData::knob1_pngSize);
-    knobImage[2] = ImageCache::getFromMemory(BinaryData::knob2_png,
-                                             (size_t)BinaryData::knob2_pngSize);
-    knobImage[3] = ImageCache::getFromMemory(BinaryData::knob3_png,
-                                             (size_t)BinaryData::knob3_pngSize);
-    knobImage[4] = ImageCache::getFromMemory(BinaryData::knob4_png,
-                                             (size_t)BinaryData::knob4_pngSize);
-    // g.drawImage(knobImage, margin, centreY-(100-2*margin)/2, 100-2*margin,
-    // 100-2*margin, 0, 0, 200, 200);
-    AffineTransform transform;
-    transform = transform.scaled(2 * radius / knobImage[0].getWidth(),
-                                 2 * radius / knobImage[0].getHeight());
-    transform = transform.translated(margin, (height / 2 - radius));
-    int index = (int)(angle / 2.0f / 3.1415f * 24 * 5) % 5;
-    g.drawImageTransformed(knobImage[index], transform);
-  }
-#endif
-
-// Do not draw toggle button in release mode
+// Do not draw JUCE UI elements sliders in release mode
 #if !_DEBUG
+  void drawRotarySlider(Graphics &, int, int, int, int, float, const float,
+                        const float, Slider &) override {}
   void drawToggleButton(Graphics &, ToggleButton &, bool, bool) override {}
 #endif
 };
