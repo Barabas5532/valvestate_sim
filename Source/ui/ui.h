@@ -42,36 +42,45 @@ public:
  */
 class ImageKnob final : public juce::Slider {
 public:
-  explicit ImageKnob(const std::function<const char*(size_t, int&)>& get_image_resource)
+  explicit ImageKnob(const std::function<const char*(int&)>& get_image_resource)
       : Slider(), get_image_resource{get_image_resource} {
     setInterceptsMouseClicks(false, false);
 
-    for (size_t i = 0; i < IMAGE_COUNT; ++i)
-    {
-      int size = 0;
-      auto memory = get_image_resource(i, size);
-      images[i] = ImageCache::getFromMemory(memory, size);
-    }
+    int size = 0;
+    auto memory = get_image_resource(size);
+    image = ImageCache::getFromMemory(memory, size);
   }
 
   void paint(juce::Graphics &g) override {
     auto range = getNormalisableRange();
-    double value = range.convertTo0to1(getValue());;
+    double value = range.convertTo0to1(getValue());
     jassert(value >= 0);
     jassert(value <= 1);
     
     int index = roundToInt((value * (IMAGE_COUNT - 1)));
     jassert(index >= 0);
     jassert(index < IMAGE_COUNT);
- 
-    g.drawImageAt(images[index], 0, 0, false);
+
+    auto single_image_height = image.getHeight() / IMAGE_COUNT;
+    
+    // clang-format off
+    g.drawImage(image,
+                // destination position
+                0, 0,
+                // destination size
+                image.getWidth(), single_image_height,
+                // source position
+                0, index * single_image_height,
+                // source size
+                image.getWidth(), single_image_height);
+    // clang-format on
   }
 
 private:
-  static constexpr int IMAGE_COUNT = 256;
+  static constexpr int IMAGE_COUNT = 257;
 
-  std::array<Image, IMAGE_COUNT> images;
-  std::function<const char*(size_t i, int& dataSizeInBytes)> get_image_resource;
+  Image image;
+  std::function<const char *(int &dataSizeInBytes)> get_image_resource;
 };
 
 /**

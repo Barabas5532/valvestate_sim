@@ -27,40 +27,34 @@
 #include "treble_binary_data.h"
 #include "volume_binary_data.h"
 
-static const char *get_gain_image_resource(size_t i, int &dataSizeInBytes) {
-  jassert(i < gain_binary_data::namedResourceListSize);
-  return gain_binary_data::getNamedResource(gain_binary_data::namedResourceList[i],
-                                          dataSizeInBytes);
+static const char *get_gain_image_resource(int &dataSizeInBytes) {
+  dataSizeInBytes = gain_binary_data::gain_pngSize;
+  return gain_binary_data::gain_png;
 }
 
-static const char *get_bass_image_resource(size_t i, int &dataSizeInBytes) {
-  jassert(i < bass_binary_data::namedResourceListSize);
-  return bass_binary_data::getNamedResource(bass_binary_data::namedResourceList[i],
-                                          dataSizeInBytes);
+static const char *get_bass_image_resource(int &dataSizeInBytes) {
+  dataSizeInBytes = bass_binary_data::bass_pngSize;
+  return bass_binary_data::bass_png;
 }
 
-static const char *get_middle_image_resource(size_t i, int &dataSizeInBytes) {
-  jassert(i < middle_binary_data::namedResourceListSize);
-  return middle_binary_data::getNamedResource(middle_binary_data::namedResourceList[i],
-                                          dataSizeInBytes);
+static const char *get_middle_image_resource(int &dataSizeInBytes) {
+  dataSizeInBytes = middle_binary_data::middle_pngSize;
+  return middle_binary_data::middle_png;
 }
 
-static const char *get_treble_image_resource(size_t i, int &dataSizeInBytes) {
-  jassert(i < treble_binary_data::namedResourceListSize);
-  return treble_binary_data::getNamedResource(treble_binary_data::namedResourceList[i],
-                                          dataSizeInBytes);
+static const char *get_treble_image_resource(int &dataSizeInBytes) {
+  dataSizeInBytes = treble_binary_data::treble_pngSize;
+  return treble_binary_data::treble_png;
 }
 
-static const char *get_contour_image_resource(size_t i, int &dataSizeInBytes) {
-  jassert(i < contour_binary_data::namedResourceListSize);
-  return contour_binary_data::getNamedResource(contour_binary_data::namedResourceList[i],
-                                          dataSizeInBytes);
+static const char *get_contour_image_resource(int &dataSizeInBytes) {
+  dataSizeInBytes = contour_binary_data::contour_pngSize;
+  return contour_binary_data::contour_png;
 }
 
-static const char *get_volume_image_resource(size_t i, int &dataSizeInBytes) {
-  jassert(i < volume_binary_data::namedResourceListSize);
-  return volume_binary_data::getNamedResource(volume_binary_data::namedResourceList[i],
-                                          dataSizeInBytes);
+static const char *get_volume_image_resource(int &dataSizeInBytes) {
+  dataSizeInBytes = volume_binary_data::volume_pngSize;
+  return volume_binary_data::volume_png;
 }
 
 static const char *get_led_image_resource(int &dataSizeInBytes) {

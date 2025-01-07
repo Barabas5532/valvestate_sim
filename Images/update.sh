@@ -16,8 +16,7 @@ declare -a knobs=("bass" "contour" "gain" "middle" "treble" "volume")
 for knob in "${knobs[@]}"
 do
   echo "$knob"
-  mkdir -p "Images/$knob"
-  cp $1/$knob/* "Images/$knob"
+  magick montage -mode concatenate -background transparent -tile 1x $1/$knob/* Images/$knob.png
 done
 
 # Copy images from render output to project, and fix alpha channel data
