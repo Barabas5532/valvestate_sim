@@ -23,17 +23,11 @@
 #include "PluginProcessor.h"
 #include "ui.h"
 
-//==============================================================================
-/**
-*/
-class ValvestateAudioProcessorEditor  : public AudioProcessorEditor
+class ValvestateAudioProcessorEditor final : public AudioProcessorEditor, private Timer
 {
 public:
-    ValvestateAudioProcessorEditor (ValvestateAudioProcessor&);
-    ~ValvestateAudioProcessorEditor();
+    explicit ValvestateAudioProcessorEditor (ValvestateAudioProcessor&);
 
-    //==============================================================================
-    void paint (Graphics&) override;
     void resized() override;
 
 #if _DEBUG
@@ -42,45 +36,20 @@ public:
 #endif
 
 private:
-    void applySliderStyle(Slider &s);
+    void timerCallback() override;
+
+    void show_normal_ui();
 
     ValvestateAudioProcessor& processor;
 
     ValvestateLookAndFeel vsLookAndFeel;
 
-    typedef AudioProcessorValueTreeState::SliderAttachment SliderAttachment;
-    typedef AudioProcessorValueTreeState::ButtonAttachment ButtonAttachment;
-
-    Slider gain, bass, middle, treble, contour, volume;
-    ToggleButton odButton;
-
-    std::unique_ptr<SliderAttachment> gainAttachment;
-    std::unique_ptr<SliderAttachment> bassAttachment;
-    std::unique_ptr<SliderAttachment> middleAttachment;
-    std::unique_ptr<SliderAttachment> trebleAttachment;
-    std::unique_ptr<SliderAttachment> contourAttachment;
-    std::unique_ptr<SliderAttachment> volumeAttachment;
-    std::unique_ptr<ButtonAttachment> odAttachment;
-    std::unique_ptr<ButtonAttachment> odLedAttachment;
-
-    Image backgroundImage;
-    Image ledImage;
+    ThreadPool pool;
+    std::vector<Image> preCachedImages;
+    int totalImageCount;
+    std::atomic<int> cachedImageCount;
     
-    ImageKnob knobGain;
-    ImageKnob knobBass;
-    ImageKnob knobMiddle;
-    ImageKnob knobTreble;
-    ImageKnob knobContour;
-    ImageKnob knobVolume;
-    
-    ImageLed odLed;
-
-    std::unique_ptr<SliderAttachment> knobGainAttachment;
-    std::unique_ptr<SliderAttachment> knobBassAttachment;
-    std::unique_ptr<SliderAttachment> knobMiddleAttachment;
-    std::unique_ptr<SliderAttachment> knobTrebleAttachment;
-    std::unique_ptr<SliderAttachment> knobContourAttachment;
-    std::unique_ptr<SliderAttachment> knobVolumeAttachment;
+    std::unique_ptr<ValvestateUi> ui;
 
     static constexpr int UI_WIDTH = 1267;
     static constexpr int UI_HEIGHT = 712;

@@ -17,172 +17,111 @@
     with Valvestate Sim.  If not, see <https://www.gnu.org/licenses/>.
 */
 
-#include "PluginProcessor.h"
 #include "PluginEditor.h"
-#include "BackgroundBinaryData.h"
-#include "bass_binary_data.h"
-#include "contour_binary_data.h"
-#include "gain_binary_data.h"
-#include "middle_binary_data.h"
-#include "treble_binary_data.h"
-#include "volume_binary_data.h"
+#include "PluginProcessor.h"
 
-static const char *get_gain_image_resource(int &dataSizeInBytes) {
+const char *get_gain_image_resource(int &dataSizeInBytes) {
   dataSizeInBytes = gain_binary_data::gain_pngSize;
   return gain_binary_data::gain_png;
 }
 
-static const char *get_bass_image_resource(int &dataSizeInBytes) {
+const char *get_bass_image_resource(int &dataSizeInBytes) {
   dataSizeInBytes = bass_binary_data::bass_pngSize;
   return bass_binary_data::bass_png;
 }
 
-static const char *get_middle_image_resource(int &dataSizeInBytes) {
+const char *get_middle_image_resource(int &dataSizeInBytes) {
   dataSizeInBytes = middle_binary_data::middle_pngSize;
   return middle_binary_data::middle_png;
 }
 
-static const char *get_treble_image_resource(int &dataSizeInBytes) {
+const char *get_treble_image_resource(int &dataSizeInBytes) {
   dataSizeInBytes = treble_binary_data::treble_pngSize;
   return treble_binary_data::treble_png;
 }
 
-static const char *get_contour_image_resource(int &dataSizeInBytes) {
+const char *get_contour_image_resource(int &dataSizeInBytes) {
   dataSizeInBytes = contour_binary_data::contour_pngSize;
   return contour_binary_data::contour_png;
 }
 
-static const char *get_volume_image_resource(int &dataSizeInBytes) {
+const char *get_volume_image_resource(int &dataSizeInBytes) {
   dataSizeInBytes = volume_binary_data::volume_pngSize;
   return volume_binary_data::volume_png;
 }
 
-static const char *get_led_image_resource(int &dataSizeInBytes) {
+const char *get_led_image_resource(int &dataSizeInBytes) {
   dataSizeInBytes = BackgroundBinaryData::led_pngSize;
   return BackgroundBinaryData::led_png;
 }
 
-//==============================================================================
-ValvestateAudioProcessorEditor::ValvestateAudioProcessorEditor (ValvestateAudioProcessor& p)
-    : AudioProcessorEditor (&p), processor (p), knobGain(get_gain_image_resource), knobBass(get_bass_image_resource), knobMiddle(get_middle_image_resource), knobTreble(get_treble_image_resource), knobContour(get_contour_image_resource), knobVolume(get_volume_image_resource), odLed("od_led", get_led_image_resource)
-{
-    setResizable(false, false);
-    
-    setLookAndFeel(&vsLookAndFeel);
+ValvestateAudioProcessorEditor::ValvestateAudioProcessorEditor(
+    ValvestateAudioProcessor &p)
+    : AudioProcessorEditor(&p), processor(p) {
+  startTimer(100);
+      
+  setResizable(false, false);
 
-    applySliderStyle(gain);
-    applySliderStyle(bass);
-    applySliderStyle(middle);
-    applySliderStyle(treble);
-    applySliderStyle(contour);
-    applySliderStyle(volume);
+  Logger::outputDebugString("start caching images");
+  auto assets = {
+      get_gain_image_resource,    get_bass_image_resource,
+      get_middle_image_resource,  get_treble_image_resource,
+      get_contour_image_resource, get_volume_image_resource,
+      get_led_image_resource,
+  };
+  
+  totalImageCount = assets.size();
 
-    gainAttachment.reset(new SliderAttachment(processor.parameters, "gain", gain));
-    bassAttachment.reset(new SliderAttachment(processor.parameters, "bass", bass));
-    middleAttachment.reset(new SliderAttachment(processor.parameters, "middle", middle));
-    trebleAttachment.reset(new SliderAttachment(processor.parameters, "treble", treble));
-    contourAttachment.reset(new SliderAttachment(processor.parameters, "contour", contour));
-    volumeAttachment.reset(new SliderAttachment(processor.parameters, "volume", volume));
+  // Pre cache the image while showing a loading screen
+  for (const auto &asset : assets) {
+    pool.addJob([this, asset]() -> void {
+      int size;
+      auto data = asset(size);
+      Logger::outputDebugString("start");
+      this->preCachedImages.push_back(ImageCache::getFromMemory(data, size));
+      Logger::outputDebugString("done");
+      cachedImageCount++;
+    });
+  }
 
-    odAttachment.reset(new ButtonAttachment(processor.parameters, "od", odButton));
-    odLedAttachment.reset(new ButtonAttachment(processor.parameters, "od", odLed));
-
-    knobGainAttachment.reset(new SliderAttachment(processor.parameters, "gain", knobGain));
-    knobBassAttachment.reset(new SliderAttachment(processor.parameters, "bass", knobBass));
-    knobMiddleAttachment.reset(new SliderAttachment(processor.parameters, "middle", knobMiddle));
-    knobTrebleAttachment.reset(new SliderAttachment(processor.parameters, "treble", knobTreble));
-    knobContourAttachment.reset(new SliderAttachment(processor.parameters, "contour", knobContour));
-    knobVolumeAttachment.reset(new SliderAttachment(processor.parameters, "volume", knobVolume));
-
-    addAndMakeVisible(knobGain);
-    addAndMakeVisible(knobBass);
-    addAndMakeVisible(knobMiddle);
-    addAndMakeVisible(knobTreble);
-    addAndMakeVisible(knobContour);
-    addAndMakeVisible(knobVolume);
-
-    addAndMakeVisible(odButton);
-    addAndMakeVisible(gain);
-    addAndMakeVisible(bass);
-    addAndMakeVisible(middle);
-    addAndMakeVisible(treble);
-    addAndMakeVisible(contour);
-    addAndMakeVisible(volume);
-
-    addAndMakeVisible(odLed);
-
-    backgroundImage = ImageCache::getFromMemory (BackgroundBinaryData::background_png,
-                                                (size_t)BackgroundBinaryData::background_pngSize);
-                                                
-    ledImage = ImageCache::getFromMemory (BackgroundBinaryData::led_png,
-                                                 (size_t)BackgroundBinaryData::led_pngSize);
+  // A UI timer will wake up this object later to poll the cachedImageCount to
+  // switch from the loading screen to the real UI.
 
   setSize(UI_WIDTH, UI_HEIGHT);
 }
 
-void ValvestateAudioProcessorEditor::applySliderStyle(Slider &s)
-{
-    s.setSliderStyle(Slider::RotaryHorizontalVerticalDrag);
-    s.setTextBoxStyle(Slider::NoTextBox, false, 0, 0);
-#if _DEBUG
-    s.setPopupDisplayEnabled(true, true, nullptr);
-#endif
-    s.setLookAndFeel(&vsLookAndFeel);
+void ValvestateAudioProcessorEditor::resized() {
+  if (ui)
+    ui->setBounds(getLocalBounds());
 }
 
-ValvestateAudioProcessorEditor::~ValvestateAudioProcessorEditor()
-{
-    setLookAndFeel(nullptr);
+void ValvestateAudioProcessorEditor::timerCallback() {
+  if (cachedImageCount == totalImageCount) {
+    Logger::outputDebugString("done caching images");
+    show_normal_ui();
+    stopTimer();
+  }
 }
 
-void ValvestateAudioProcessorEditor::paint (Graphics& g)
-{
-  g.drawImageAt(backgroundImage, 0, 0, false);
-  
-  auto ledImageHalfWidth = ledImage.getWidth() / 2;
-  auto ledImageHalfHeight = ledImage.getHeight() / 2;
-  g.drawImageAt(ledImage, 917 - ledImageHalfWidth, 250 - ledImageHalfHeight, false);
-}
+void ValvestateAudioProcessorEditor::show_normal_ui(){
+  ui = std::make_unique<ValvestateUi>(processor.parameters);
 
-static Rectangle<int> getKnobBounds(Point<int> p) {
-  return Rectangle{p, p + Point{60, 60}};
-}
-
-void ValvestateAudioProcessorEditor::resized()
-{
-  odButton.setBounds(Rectangle{Point{464, 266}, Point{478, 282}});
-
-    gain.setBounds(getKnobBounds(Point{398, 222}));
-    bass.setBounds(getKnobBounds(Point{486, 220}));
-    middle.setBounds(getKnobBounds(Point{561, 220}));
-    treble.setBounds(getKnobBounds(Point{632, 220}));
-    contour.setBounds(getKnobBounds(Point{704, 219}));
-    volume.setBounds(getKnobBounds(Point{781, 221}));
-
-    knobGain.setBounds(getLocalBounds());
-    knobBass.setBounds(getLocalBounds());
-    knobMiddle.setBounds(getLocalBounds());
-    knobTreble.setBounds(getLocalBounds());
-    knobContour.setBounds(getLocalBounds());
-    knobVolume.setBounds(getLocalBounds());
-
-    auto ledImageHalfWidth = ledImage.getWidth() / 2;
-    auto ledImageHalfHeight = ledImage.getHeight() / 2;
-    odLed.setBounds(ledImage.getBounds());
-    odLed.setTopLeftPosition(
-        {471 - ledImageHalfWidth, 250 - ledImageHalfHeight});
+  ui->setBounds(getLocalBounds());
+  addAndMakeVisible(*ui);
 }
 
 #if _DEBUG
 void ValvestateAudioProcessorEditor::mouseDown(const MouseEvent &event) {
   Component::mouseDown(event);
-  
-  Logger::outputDebugString(juce::String::formatted("mouse down %d %d", event.x, event.y));
+
+  Logger::outputDebugString(
+      juce::String::formatted("mouse down %d %d", event.x, event.y));
 }
 
 void ValvestateAudioProcessorEditor::mouseUp(const MouseEvent &event) {
   Component::mouseUp(event);
 
-  Logger::outputDebugString(juce::String::formatted("mouse up %d %d", event.x, event.y));
+  Logger::outputDebugString(
+      juce::String::formatted("mouse up %d %d", event.x, event.y));
 }
 #endif
