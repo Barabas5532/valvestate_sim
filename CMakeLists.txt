@@ -1,6 +1,5 @@
 cmake_minimum_required(VERSION 3.15)
 project(Valvestate VERSION 0.0.1)
-set(CMAKE_EXPORT_COMPILE_COMMANDS ON)
 
 add_subdirectory(JUCE)
 
@@ -36,8 +35,7 @@ target_compile_definitions(Valvestate
 
 target_link_libraries(Valvestate
     PRIVATE
-        juce::juce_audio_utils
-        juce::juce_dsp
+        valvestate::juce_modules
     PUBLIC
         juce::juce_recommended_config_flags
         juce::juce_recommended_lto_flags
