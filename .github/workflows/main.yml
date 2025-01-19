@@ -56,7 +56,7 @@ jobs:
         run: cmake --build build --target Valvestate_Standalone
         
       - name: Test
-        run: >
+        run: |
           cmake --build build --target test/all
           ctest --test-dir build -C ${{matrix.build_type}}
 
