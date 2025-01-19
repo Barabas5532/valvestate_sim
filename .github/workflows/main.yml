@@ -54,6 +54,10 @@ jobs:
 
       - name: Build
         run: cmake --build build --target Valvestate_Standalone
+        
+      - name: Test
+        working_directory: build
+        run: ctest -C ${{matrix.build_type}}
 
       - name: ccache statistics
         run: ccache --show-stats
