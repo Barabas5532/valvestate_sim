@@ -12,8 +12,6 @@ juce_add_plugin(Valvestate
     FORMATS VST3 Standalone
     PRODUCT_NAME "HYBRID 8100")
 
-juce_generate_juce_header(Valvestate)
-
 target_sources(Valvestate
     PRIVATE
         Source/PluginProcessor.cpp

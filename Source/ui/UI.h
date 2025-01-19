@@ -19,7 +19,7 @@
 
 #pragma once
 
-#include "../JuceLibraryCode/JuceHeader.h"
+#include <juce_gui_basics/juce_gui_basics.h>
 
 const Colour GOLD(0xffa1781b);
 const Colour DARKER(0xff111111);
