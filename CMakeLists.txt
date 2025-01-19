@@ -3,6 +3,7 @@ project(Valvestate VERSION 0.0.1)
 
 add_subdirectory(JUCE)
 add_subdirectory(Source)
+add_subdirectory(test)
 
 juce_add_plugin(Valvestate
     BUNDLE_ID "me.barabas.valvestate"
