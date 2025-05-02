@@ -53,6 +53,8 @@ public:
     int size = 0;
     auto memory = get_image_resource(size);
     image = ImageCache::getFromMemory(memory, size);
+
+    setTextBoxStyle(Slider::NoTextBox, false, 0, 0);
   }
 
   void paint(juce::Graphics &g) override {
