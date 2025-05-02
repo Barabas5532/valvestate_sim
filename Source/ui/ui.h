@@ -63,8 +63,9 @@ public:
     jassert(value >= 0);
     jassert(value <= 1);
     
-    int index = roundToInt((value * (IMAGE_COUNT - 1)));
-    jassert(index >= 0);
+    // The denoising is not applied to the first image, so we don't use it
+    int index = roundToInt((value * (IMAGE_COUNT - 2))) + 1;
+    jassert(index >= 1);
     jassert(index < IMAGE_COUNT);
 
     auto single_image_height = image.getHeight() / IMAGE_COUNT;
