@@ -62,7 +62,6 @@ ValvestateAudioProcessorEditor::ValvestateAudioProcessorEditor(
       
   setResizable(false, false);
 
-  Logger::outputDebugString("start caching images");
   auto assets = {
       get_gain_image_resource,    get_bass_image_resource,
       get_middle_image_resource,  get_treble_image_resource,
@@ -77,9 +76,7 @@ ValvestateAudioProcessorEditor::ValvestateAudioProcessorEditor(
     pool.addJob([this, asset]() -> void {
       int size;
       auto data = asset(size);
-      Logger::outputDebugString("start");
       this->preCachedImages.push_back(ImageCache::getFromMemory(data, size));
-      Logger::outputDebugString("done");
       cachedImageCount++;
     });
   }
@@ -97,7 +94,6 @@ void ValvestateAudioProcessorEditor::resized() {
 
 void ValvestateAudioProcessorEditor::timerCallback() {
   if (cachedImageCount == totalImageCount) {
-    Logger::outputDebugString("done caching images");
     show_normal_ui();
     stopTimer();
   }
