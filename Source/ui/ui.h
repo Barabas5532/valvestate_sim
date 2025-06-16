@@ -20,13 +20,14 @@
 
 #include "resources.h"
 
-#include "../JuceLibraryCode/JuceHeader.h"
 #include "PluginEditor.h"
 #include <juce_audio_basics/juce_audio_basics.h>
 #include <juce_audio_processors/juce_audio_processors.h>
 #include <juce_core/juce_core.h>
 
 #include <memory>
+
+using namespace juce;
 
 class ValvestateLookAndFeel : public LookAndFeel_V4 {
 public:

@@ -58,7 +58,7 @@ ValvestateAudioProcessor::~ValvestateAudioProcessor()
 //==============================================================================
 const String ValvestateAudioProcessor::getName() const
 {
-    return JucePlugin_Name;
+    return "HYBRID 8100";
 }
 
 bool ValvestateAudioProcessor::acceptsMidi() const

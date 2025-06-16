@@ -18,7 +18,9 @@
 */
 
 #pragma once
-#include "../JuceLibraryCode/JuceHeader.h"
+#include <juce_dsp/juce_dsp.h>
+
+using namespace juce;
 
 class Clipping
 {

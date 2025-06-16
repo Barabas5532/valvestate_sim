@@ -19,9 +19,12 @@
 
 #pragma once
 
-#include "../JuceLibraryCode/JuceHeader.h"
+#include <juce_dsp/juce_dsp.h>
+
 #include "PluginProcessor.h"
 #include "ui.h"
+
+using namespace juce;
 
 class ValvestateAudioProcessorEditor final : public AudioProcessorEditor, private Timer
 {
