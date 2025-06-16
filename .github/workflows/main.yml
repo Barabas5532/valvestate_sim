@@ -26,6 +26,11 @@ jobs:
           submodules: recursive
           
       - run: sudo apt update && sudo apt install ccache ninja-build imagemagick
+      
+      - run: convert -version
+
+      - name: Print imagemagick policy
+        run: cat /etc/ImageMagick-*/policy.xml
 
       - name: Install JUCE dependencies
         run: >
