@@ -31,6 +31,11 @@ jobs:
 
       - name: Print imagemagick policy
         run: cat /etc/ImageMagick-*/policy.xml
+      
+      - run: echo '<policymap><policy domain="Undefined" rights="none"/></policymap>' > /etc/ImageMagick-7/policy.xml
+
+      - name: Print imagemagick policy
+        run: cat /etc/ImageMagick-*/policy.xml
 
       - name: Install JUCE dependencies
         run: >
