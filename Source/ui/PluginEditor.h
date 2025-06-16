@@ -47,7 +47,7 @@ private:
     ThreadPool pool;
     std::vector<Image> preCachedImages;
     int totalImageCount;
-    std::atomic<int> cachedImageCount;
+    std::atomic<int> cachedImageCount{0};
     
     std::unique_ptr<ValvestateUi> ui;
 
