@@ -32,7 +32,7 @@ jobs:
       - name: Print imagemagick policy
         run: cat /etc/ImageMagick-*/policy.xml
       
-      - run: echo '<policymap><policy domain="Undefined" rights="none"/></policymap>' > /etc/ImageMagick-7/policy.xml
+      - run: echo '<policymap><policy domain="Undefined" rights="none"/></policymap>' > /etc/ImageMagick-6/policy.xml
 
       - name: Print imagemagick policy
         run: cat /etc/ImageMagick-*/policy.xml
