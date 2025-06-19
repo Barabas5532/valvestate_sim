@@ -1,6 +1,9 @@
 cmake_minimum_required(VERSION 3.15)
 project(Valvestate VERSION 0.0.1)
 
+# VST3 build must use PIC
+set(CMAKE_POSITION_INDEPENDENT_CODE ON)
+
 include(CTest)
 
 add_subdirectory(JUCE)
