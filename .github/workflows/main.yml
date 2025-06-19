@@ -27,15 +27,8 @@ jobs:
           
       - run: sudo apt update && sudo apt install ccache ninja-build imagemagick
       
-      - run: convert -version
-
-      - name: Print imagemagick policy
-        run: cat /etc/ImageMagick-*/policy.xml
-      
-      - run: echo '<policymap><policy domain="Undefined" rights="none"/></policymap>' | sudo tee /etc/ImageMagick-6/policy.xml > /dev/null
-
-      - name: Print imagemagick policy
-        run: cat /etc/ImageMagick-*/policy.xml
+      - name: Set up the Open ImageMagick security policy
+        run: echo '<policymap><policy domain="Undefined" rights="none"/></policymap>' | sudo tee /etc/ImageMagick-6/policy.xml > /dev/null
 
       - name: Install JUCE dependencies
         run: >
