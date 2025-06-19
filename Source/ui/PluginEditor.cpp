@@ -43,7 +43,7 @@ ValvestateAudioProcessorEditor::ValvestateAudioProcessorEditor (ValvestateAudioP
     applySliderStyle(volume);
 
     applyLabelStyle(title);
-    title.setFont(Font(50));
+    title.setFont(Font(FontOptions(50)));
     applyLabelStyle(gainLabel);
     applyLabelStyle(buttonLabel);
     applyLabelStyle(bassLabel);
@@ -99,7 +99,7 @@ void ValvestateAudioProcessorEditor::applySliderStyle(Slider &s)
 
 void ValvestateAudioProcessorEditor::applyLabelStyle(Label &l)
 {
-    auto f = Font(20, Font::FontStyleFlags::bold);
+    auto f = Font(FontOptions(20, Font::FontStyleFlags::bold));
     l.setFont(f);
     l.setJustificationType(Justification::centredTop);
 }
