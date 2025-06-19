@@ -26,7 +26,10 @@ jobs:
         with:
           submodules: recursive
           
-      - run: sudo apt update && sudo apt install ccache ninja-build
+      - run: sudo apt update && sudo apt install ccache ninja-build imagemagick
+      
+      - name: Set up the Open ImageMagick security policy
+        run: echo '<policymap><policy domain="Undefined" rights="none"/></policymap>' | sudo tee /etc/ImageMagick-6/policy.xml > /dev/null
 
       - name: Install JUCE dependencies
         run: >

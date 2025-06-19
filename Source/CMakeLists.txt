@@ -15,6 +15,15 @@ target_sources(valvestate_lib
 target_include_directories(valvestate_lib PRIVATE .)
 
 target_link_libraries(valvestate_lib
+                      PRIVATE
+                      ValvestateBackgroundBinaryData
+                      ValvestateBassBinaryData
+                      ValvestateContourBinaryData
+                      ValvestateGainBinaryData
+                      ValvestateGainBinaryData
+                      ValvestateMiddleBinaryData
+                      ValvestateTrebleBinaryData
+                      ValvestateVolumeBinaryData
                       PUBLIC
                       valvestate::juce_modules
                       juce::juce_recommended_config_flags

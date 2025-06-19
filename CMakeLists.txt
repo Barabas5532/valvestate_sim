@@ -7,6 +7,7 @@ set(CMAKE_POSITION_INDEPENDENT_CODE ON)
 include(CTest)
 
 add_subdirectory(JUCE)
+add_subdirectory(Images)
 add_subdirectory(Source)
 add_subdirectory(test)
 

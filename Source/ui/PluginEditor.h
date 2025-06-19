@@ -22,53 +22,40 @@
 #include <juce_dsp/juce_dsp.h>
 
 #include "PluginProcessor.h"
-#include "UI.h"
+#include "ui.h"
 
 using namespace juce;
 
-//==============================================================================
-/**
-*/
-class ValvestateAudioProcessorEditor  : public AudioProcessorEditor
+class ValvestateAudioProcessorEditor final : public AudioProcessorEditor, private Timer
 {
 public:
-    ValvestateAudioProcessorEditor (ValvestateAudioProcessor&);
-    ~ValvestateAudioProcessorEditor();
+    explicit ValvestateAudioProcessorEditor (ValvestateAudioProcessor&);
 
-    //==============================================================================
-    void paint (Graphics&) override;
     void resized() override;
 
+#if _DEBUG
+    void mouseDown(const juce::MouseEvent &event) override;
+    void mouseUp(const juce::MouseEvent &event) override;
+#endif
+
 private:
-    void applyLabelStyle(Label &l);
-    void applySliderStyle(Slider &s);
+    void timerCallback() override;
+
+    void show_normal_ui();
 
     ValvestateAudioProcessor& processor;
 
     ValvestateLookAndFeel vsLookAndFeel;
 
-    typedef AudioProcessorValueTreeState::SliderAttachment SliderAttachment;
-    typedef AudioProcessorValueTreeState::ButtonAttachment ButtonAttachment;
+    ThreadPool pool;
+    std::vector<Image> preCachedImages;
+    int totalImageCount;
+    std::atomic<int> cachedImageCount{0};
+    
+    std::unique_ptr<ValvestateUi> ui;
 
-    Slider gain, bass, middle, treble, contour, volume;
-    ToggleButton button;
-
-    std::unique_ptr<SliderAttachment> gainAttachment;
-    std::unique_ptr<SliderAttachment> bassAttachment;
-    std::unique_ptr<SliderAttachment> middleAttachment;
-    std::unique_ptr<SliderAttachment> trebleAttachment;
-    std::unique_ptr<SliderAttachment> contourAttachment;
-    std::unique_ptr<SliderAttachment> volumeAttachment;
-    std::unique_ptr<ButtonAttachment> buttonAttachment;
-
-    Label title;
-    Label buttonLabel;
-    Label gainLabel;
-    Label bassLabel;
-    Label middleLabel;
-    Label trebleLabel;
-    Label contourLabel;
-    Label volumeLabel;
+    static constexpr int UI_WIDTH = 1267;
+    static constexpr int UI_HEIGHT = 712;
 
     JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR (ValvestateAudioProcessorEditor)
 };
