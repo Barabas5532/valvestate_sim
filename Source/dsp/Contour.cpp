@@ -18,7 +18,8 @@
 */
 
 #include "Contour.h"
-//#include <cmath>
+
+#include <juce_core/juce_core.h>
 
 ContourFilter::ContourFilter()
 {
@@ -98,7 +99,7 @@ void ContourFilter::setParameter(float p)
         1.22402003248511e-7*std::pow(K, 2) + 0.000583333333333333*K*p +
         0.00052012272153041*K - 0.166666666666667;
 
-    jassert (A0 != 0);
+    jassert (!juce::approximatelyEqual<float>(A0, 0));
 
     filter.coefficients->coefficients.clear();
 

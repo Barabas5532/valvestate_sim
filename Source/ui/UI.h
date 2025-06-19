@@ -111,7 +111,7 @@ public:
         Rectangle<int> topHalf(centreX - w/2, centreY - h, w, h);
         Rectangle<int> bottomHalf(centreX - w/2, centreY, w, h);
 
-        g.setFont(Font(20, Font::FontStyleFlags::bold));
+        g.setFont(Font(FontOptions(20, Font::FontStyleFlags::bold)));
 
         //set slider thumb colours
         setColour (Slider::thumbColourId, b.getToggleState() ? Colours::red : GOLD); 
