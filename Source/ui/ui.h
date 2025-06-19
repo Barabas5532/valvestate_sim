@@ -47,8 +47,8 @@ public:
  */
 class ImageKnob final : public juce::Slider {
 public:
-  explicit ImageKnob(const std::function<const char*(int&)>& get_image_resource)
-      : Slider(), get_image_resource{get_image_resource} {
+  explicit ImageKnob(const std::function<const char*(int&)>& a_get_image_resource)
+      : Slider(), get_image_resource{a_get_image_resource} {
     setInterceptsMouseClicks(false, false);
 
     int size = 0;
@@ -98,8 +98,8 @@ class ImageLed final : public juce::Button {
 public:
   explicit ImageLed(
       const String &buttonName,
-      const std::function<const char *(int &)> &get_image_resource)
-      : Button(buttonName), get_image_resource{get_image_resource} {
+      const std::function<const char *(int &)> &a_get_image_resource)
+      : Button(buttonName), get_image_resource{a_get_image_resource} {
     setInterceptsMouseClicks(false, false);
 
     int size = 0;
